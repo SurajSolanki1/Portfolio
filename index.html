@@ -117,8 +117,6 @@
             renderer.setPixelRatio(window.devicePixelRatio || 1);
             renderer.setSize(container.clientWidth, container.clientHeight);
             renderer.setClearColor(0x000000, 1);
-            renderer.shadowMap.enabled = true; // Enable shadow maps
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Softer shadows
 
             while (container.firstChild && container.firstChild.tagName === 'CANVAS') container.removeChild(container.firstChild);
             container.appendChild(renderer.domElement);
@@ -132,12 +130,6 @@
             // Add Lights
             scene.add(new THREE.AmbientLight(0xffffff, 0.1));
             const sunLight = new THREE.PointLight(0xffffff, 2.5, 100);
-            sunLight.castShadow = true;
-            sunLight.shadow.mapSize.width = 1024;
-            sunLight.shadow.mapSize.height = 1024;
-            sunLight.shadow.camera.near = 0.5;
-            sunLight.shadow.camera.far = 100;
-            sunLight.name = "sunLight";
             scene.add(sunLight);
 
             // Add post-processing for bloom effect
@@ -196,8 +188,6 @@
                 emissiveMap: sunEmissiveTexture
             });
             sun = new THREE.Mesh(sunGeometry, sunMaterial);
-            sun.castShadow = true;
-            sun.receiveShadow = false;
             scene.add(sun);
             sun.add(scene.getObjectByName('sunLight'));
 
@@ -244,8 +234,6 @@
                 const planetMat = new THREE.MeshStandardMaterial(materialOptions);
                 const planetMesh = new THREE.Mesh(planetGeo, planetMat);
                 planetMesh.userData = data;
-                planetMesh.castShadow = true;
-                planetMesh.receiveShadow = true;
                 planets.push(planetMesh);
                 scene.add(planetMesh);
 
@@ -282,7 +270,6 @@
                     });
                     const rings = new THREE.Mesh(ringGeo, ringMat);
                     rings.rotation.x = Math.PI / 2 - 0.2;
-                    rings.receiveShadow = true; // Rings can receive shadows
                     planetMesh.add(rings);
                 }
             });
