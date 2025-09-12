@@ -63,6 +63,9 @@
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
         // ---------- Utilities and Status Elements ----------
         function isWebGLAvailable(){
@@ -97,7 +100,7 @@
 
         // ---------- Scene Initialization ----------
         let container = document.getElementById('solarCanvas');
-        let scene, camera, renderer, controls, sun, planets = [], stars, animationId, clock;
+        let scene, camera, renderer, controls, sun, planets = [], stars, animationId, clock, composer;
         const loadingManager = new THREE.LoadingManager();
         const textureLoader = new THREE.TextureLoader(loadingManager);
 
@@ -124,8 +127,18 @@
             controls.maxDistance = 150;
             controls.minDistance = 5;
 
+            // Add Lights
             scene.add(new THREE.AmbientLight(0xffffff, 0.1));
-            
+            const sunLight = new THREE.PointLight(0xffffff, 2.5, 100);
+            scene.add(sunLight);
+
+            // Add post-processing for bloom effect
+            const renderPass = new RenderPass(scene, camera);
+            const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+            composer = new EffectComposer(renderer);
+            composer.addPass(renderPass);
+            composer.addPass(bloomPass);
+
             // Add stars to background
             addStarsBackground();
 
@@ -163,44 +176,50 @@
             scene.add(stars);
         }
 
-        // ---------- Solar System with Textures ----------
+        // ---------- Solar System with Textures and Glow ----------
         function addSolarSystem(){
             // Create the Sun
             const sunGeometry = new THREE.SphereGeometry(1.5, 64, 64);
             const sunTexture = textureLoader.load('sun_texture.jpg');
+            const sunEmissiveTexture = textureLoader.load('sun_emissive.jpg');
             const sunMaterial = new THREE.MeshBasicMaterial({
                 map: sunTexture,
+                emissive: 0xffffff,
+                emissiveMap: sunEmissiveTexture
             });
             sun = new THREE.Mesh(sunGeometry, sunMaterial);
-            const sunLight = new THREE.PointLight(0xffffff, 2, 100);
-            sun.add(sunLight);
             scene.add(sun);
+            sun.add(scene.getObjectByName('sunLight')); // Add light to sun for local illumination
 
             // Create planets
             const planetData = [
                 { name: 'mercury', distance: 3.5, size: 0.2, speed: 0.025,
-                  textures: { map: 'mercury_texture.jpg', bump: 'mercury_bump.jpg' } },
+                  textures: { map: 'mercury_texture.jpg', bump: 'mercury_bump.jpg', emissive: 'mercury_emissive.jpg' } },
                 { name: 'venus', distance: 5.5, size: 0.4, speed: 0.018,
-                  textures: { map: 'venus_texture.jpg', bump: 'venus_bump.jpg' } },
+                  textures: { map: 'venus_texture.jpg', bump: 'venus_bump.jpg', emissive: 'venus_emissive.jpg' } },
                 { name: 'earth', distance: 7.5, size: 0.45, speed: 0.015,
-                  textures: { map: 'earth_texture.jpg', bump: 'earth_bump.jpg', spec: 'earth_spec.jpg' } },
+                  textures: { map: 'earth_texture.jpg', bump: 'earth_bump.jpg', spec: 'earth_spec.jpg', emissive: 'earth_emissive.jpg' } },
                 { name: 'mars', distance: 9.5, size: 0.3, speed: 0.012,
-                  textures: { map: 'mars_texture.jpg', bump: 'mars_bump.jpg' } },
+                  textures: { map: 'mars_texture.jpg', bump: 'mars_bump.jpg', emissive: 'mars_emissive.jpg' } },
                 { name: 'jupiter', distance: 13, size: 1.2, speed: 0.008,
-                  textures: { map: 'jupiter_texture.jpg' } },
+                  textures: { map: 'jupiter_texture.jpg', emissive: 'jupiter_emissive.jpg' } },
                 { name: 'saturn', distance: 17, size: 1.0, speed: 0.006,
-                  textures: { map: 'saturn_texture.jpg' } },
+                  textures: { map: 'saturn_texture.jpg', emissive: 'saturn_emissive.jpg' },
+                  ring: { texture: 'saturn_rings_texture.png', innerRadius: 1.2, outerRadius: 2.2 } },
                 { name: 'uranus', distance: 20.5, size: 0.8, speed: 0.004,
-                  textures: { map: 'uranus_texture.jpg' } },
+                  textures: { map: 'uranus_texture.jpg', emissive: 'uranus_emissive.jpg' } },
                 { name: 'neptune', distance: 24, size: 0.75, speed: 0.002,
-                  textures: { map: 'neptune_texture.jpg' } }
+                  textures: { map: 'neptune_texture.jpg', emissive: 'neptune_emissive.jpg' } }
             ];
 
             planetData.forEach(data => {
                 const planetGeo = new THREE.SphereGeometry(data.size, 64, 64);
-
+                
                 const materialOptions = {
                     map: textureLoader.load(data.textures.map),
+                    emissive: 0xffffff,
+                    emissiveMap: textureLoader.load(data.textures.emissive),
+                    emissiveIntensity: 1.0,
                     metalness: 0.1,
                     roughness: 0.8
                 };
@@ -213,7 +232,6 @@
                 }
 
                 const planetMat = new THREE.MeshStandardMaterial(materialOptions);
-                
                 const planetMesh = new THREE.Mesh(planetGeo, planetMat);
                 planetMesh.userData = data;
                 planets.push(planetMesh);
@@ -228,9 +246,9 @@
 
                 // Add Saturn's rings
                 if (data.name === 'saturn') {
-                    const ringGeo = new THREE.RingGeometry(data.size * 1.2, data.size * 2.2, 64);
-                    const ringMat = new THREE.MeshStandardMaterial({
-                        map: textureLoader.load('saturn_rings_texture.png'),
+                    const ringGeo = new THREE.RingGeometry(data.size * data.ring.innerRadius, data.size * data.ring.outerRadius, 64);
+                    const ringMat = new THREE.MeshBasicMaterial({
+                        map: textureLoader.load(data.ring.texture),
                         side: THREE.DoubleSide,
                         transparent: true,
                         opacity: 0.8,
@@ -255,7 +273,7 @@
                 const { speed, distance } = planet.userData;
                 planet.position.x = Math.sin(elapsed * speed) * distance;
                 planet.position.z = Math.cos(elapsed * speed) * distance;
-                planet.rotation.y += 0.005; // Make planets rotate on their own axis
+                planet.rotation.y += 0.005;
             });
 
             if (stars) {
@@ -263,7 +281,7 @@
             }
 
             controls.update();
-            renderer.render(scene, camera);
+            composer.render(); // Render the scene with the bloom effect
         }
 
         // ---------- Event Listeners ----------
@@ -272,6 +290,7 @@
             camera.aspect = container.clientWidth / container.clientHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(container.clientWidth, container.clientHeight);
+            composer.setSize(container.clientWidth, container.clientHeight); // Resize the composer too
         }
         window.addEventListener('resize', onWindowResize, false);
 
@@ -288,5 +307,4 @@
         });
     </script>
 </body>
-
 </html>
