@@ -46,31 +46,10 @@
 
     .hero{
       margin-top:1.2rem;max-width:950px;margin-left:auto;margin-right:auto;padding:1.5rem;background:rgba(255,255,255,0.6);backdrop-filter:blur(8px);border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,0.08);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
     }
     .hero p{font-size:1.1rem;margin-bottom:1rem}
-    .hero-buttons{margin-top:1rem;}
     .cta{display:inline-block;background:var(--dark);color:#fff;padding:0.7rem 1.3rem;border-radius:999px;text-decoration:none;font-weight:700;margin-right:0.6rem;transition:0.3s}
     .cta:hover{background:var(--highlight);transform:translateY(-2px);box-shadow:0 0 15px var(--highlight)}
-
-    .hero-3d-container {
-      margin-top: 1.5rem;
-      width: 90%;
-      height: 400px;
-      background: #FFFDEB;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      border: 2px solid var(--yellow-primary);
-    }
-    .hero-3d-container iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
 
     main{max-width:1100px;margin:2rem auto;padding:0 1rem}
     section.card{background:#fff;border-radius:16px;padding:1.4rem;margin-bottom:1.6rem;box-shadow:0 6px 20px rgba(0,0,0,0.08)}
@@ -93,7 +72,7 @@
     .models-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
     .model-card{border-radius:16px;overflow:hidden;background:#fff;transition:transform .3s ease,box-shadow .3s ease;cursor:pointer}
     .model-card:hover{transform:scale(1.03);box-shadow:0 0 25px rgba(255,212,0,0.6)}
-    .model-thumb{height:240px;background:#FFF5CC;display:flex;align-items:center;justify-content:center;font-weight:700;color:#aaa;font-size:1.1rem}
+    .model-thumb{height:240px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#aaa;font-size:1.1rem}
     .model-body{padding:0.9rem}
 
     footer{text-align:center;margin-top:2rem;color:#666;font-size:0.9rem}
@@ -114,11 +93,6 @@
       transition: transform 0.05s linear;
       z-index: 1000;
     }
-    @media (max-width: 768px) {
-      .hero-3d-container {
-        height: 250px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -135,13 +109,8 @@
     </div>
     <div class="hero">
       <p>I create cool digital products, eye-catching UI/UX, and result-driven marketing strategies. Currently pursuing <strong>MCA</strong> at Amity University Online and have a <strong>BCA</strong> from Savitribai Phule Pune University.</p>
-      <div class="hero-buttons">
-        <a href="#models" class="cta">Explore Models</a>
-        <a href="#projects" class="cta" style="background:var(--yellow-accent);color:#000">My Projects</a>
-      </div>
-      <div class="hero-3d-container">
-        <iframe src="3d-project/your-3d-model.html"></iframe>
-      </div>
+      <a href="#models" class="cta">Explore Models</a>
+      <a href="#projects" class="cta" style="background:var(--yellow-accent);color:#000">My Projects</a>
     </div>
   </header>
 
@@ -167,12 +136,21 @@
       <h2>Featured Models & Mockups</h2>
       <div class="models-grid">
         <div class="model-card"><div class="model-thumb">Model 1</div><div class="model-body"><h3>Urban Look</h3></div></div>
-        <div class="model-card"><div class="model-thumb">Model 2</div><div class="model-body"><h3>Studio Portrait</h3></div></div>
+        
+        <div class="model-card">
+          <div class="model-thumb" id="model-2-container">
+            </div>
+          <div class="model-body">
+            <h3>My New 3D Model</h3>
+            <p>A custom 3D model displayed directly on the page using Three.js.</p>
+          </div>
+        </div>
+        
         <div class="model-card"><div class="model-thumb">Model 3</div><div class="model-body"><h3>Lifestyle Shot</h3></div></div>
         <div class="model-card"><div class="model-thumb">Model 4</div><div class="model-body"><h3>Editorial Style</h3></div></div>
       </div>
     </section>
-
+    
     <section class="card" id="projects">
       <h2>Projects</h2>
       <p>Coming soon! 🚀 I am working on cool UI revamps, Shopify stores, and SEO campaigns.</p>
@@ -183,6 +161,58 @@
     © 2025 Suraj Solanki — Built with Infinite Ideas ♾️
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script>
+    const container = document.getElementById('model-2-container');
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    // Set up the scene, camera, and renderer
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xFFF5CC);
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    camera.position.z = 2;
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(width, height);
+    container.appendChild(renderer.domElement);
+
+    // Add lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(1, 1, 1).normalize();
+    scene.add(directionalLight);
+
+    // Load the 3D model
+    const loader = new THREE.GLTFLoader();
+    loader.load('path/to/your/model.gltf', function (gltf) {
+      gltf.scene.scale.set(1, 1, 1); // Adjust scale as needed
+      scene.add(gltf.scene);
+    }, undefined, function (error) {
+      console.error(error);
+    });
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      if (scene.children[2]) { // If the model is loaded
+        scene.children[2].rotation.y += 0.005;
+      }
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Handle window resizing
+    window.addEventListener('resize', () => {
+      const newWidth = container.clientWidth;
+      const newHeight = container.clientHeight;
+      camera.aspect = newWidth / newHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(newWidth, newHeight);
+    });
+  </script>
   <script>
     const glow = document.querySelector('.cursor-glow');
     document.addEventListener('mousemove', (e) => {
