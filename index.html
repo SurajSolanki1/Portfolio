@@ -72,7 +72,7 @@
     .models-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
     .model-card{border-radius:16px;overflow:hidden;background:#fff;transition:transform .3s ease,box-shadow .3s ease;cursor:pointer}
     .model-card:hover{transform:scale(1.03);box-shadow:0 0 25px rgba(255,212,0,0.6)}
-    .model-thumb{height:240px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#aaa;font-size:1.1rem}
+    .model-thumb{height:240px;background:#FFF5CC;display:flex;align-items:center;justify-content:center;font-weight:700;color:#aaa;font-size:1.1rem}
     .model-body{padding:0.9rem}
 
     footer{text-align:center;margin-top:2rem;color:#666;font-size:0.9rem}
@@ -135,22 +135,29 @@
     <section class="card" id="models">
       <h2>Featured Models & Mockups</h2>
       <div class="models-grid">
-        <div class="model-card"><div class="model-thumb">Model 1</div><div class="model-body"><h3>Urban Look</h3></div></div>
-        
-        <div class="model-card">
-          <div class="model-thumb" id="model-2-container">
-            </div>
+        <div class="model-card" onclick="window.location.href='solar-system/solar-system.html';">
+          <div class="model-thumb">
+            <img src="images/solar-system-thumb.jpg" alt="An interactive 3D solar system with spinning planets."/>
+          </div>
           <div class="model-body">
-            <h3>My New 3D Model</h3>
-            <p>A custom 3D model displayed directly on the page using Three.js.</p>
+            <h3>Interactive 3D Solar System</h3>
+            <p>A web-based 3D solar system built with Three.js, showcasing custom textures and visual effects.</p>
           </div>
         </div>
-        
+        <div class="model-card">
+          <div class="model-thumb">
+            <img src="images/your-thumbnail-image.jpg" alt="A thumbnail for your next project."/>
+          </div>
+          <div class="model-body">
+            <h3>Your Next 3D Project</h3>
+            <p>A description of your next 3D model, like a bot or a car, to be displayed here.</p>
+          </div>
+        </div>
         <div class="model-card"><div class="model-thumb">Model 3</div><div class="model-body"><h3>Lifestyle Shot</h3></div></div>
         <div class="model-card"><div class="model-thumb">Model 4</div><div class="model-body"><h3>Editorial Style</h3></div></div>
       </div>
     </section>
-    
+
     <section class="card" id="projects">
       <h2>Projects</h2>
       <p>Coming soon! 🚀 I am working on cool UI revamps, Shopify stores, and SEO campaigns.</p>
@@ -161,58 +168,6 @@
     © 2025 Suraj Solanki — Built with Infinite Ideas ♾️
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-  <script>
-    const container = document.getElementById('model-2-container');
-    const width = container.clientWidth;
-    const height = container.clientHeight;
-
-    // Set up the scene, camera, and renderer
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xFFF5CC);
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-    camera.position.z = 2;
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(width, height);
-    container.appendChild(renderer.domElement);
-
-    // Add lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-    scene.add(ambientLight);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(1, 1, 1).normalize();
-    scene.add(directionalLight);
-
-    // Load the 3D model
-    const loader = new THREE.GLTFLoader();
-    loader.load('path/to/your/model.gltf', function (gltf) {
-      gltf.scene.scale.set(1, 1, 1); // Adjust scale as needed
-      scene.add(gltf.scene);
-    }, undefined, function (error) {
-      console.error(error);
-    });
-
-    // Animation loop
-    function animate() {
-      requestAnimationFrame(animate);
-      if (scene.children[2]) { // If the model is loaded
-        scene.children[2].rotation.y += 0.005;
-      }
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    // Handle window resizing
-    window.addEventListener('resize', () => {
-      const newWidth = container.clientWidth;
-      const newHeight = container.clientHeight;
-      camera.aspect = newWidth / newHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(newWidth, newHeight);
-    });
-  </script>
   <script>
     const glow = document.querySelector('.cursor-glow');
     document.addEventListener('mousemove', (e) => {
