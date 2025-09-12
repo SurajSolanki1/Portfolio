@@ -117,6 +117,8 @@
             renderer.setPixelRatio(window.devicePixelRatio || 1);
             renderer.setSize(container.clientWidth, container.clientHeight);
             renderer.setClearColor(0x000000, 1);
+            renderer.shadowMap.enabled = true; // Enable shadow maps
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Softer shadows
 
             while (container.firstChild && container.firstChild.tagName === 'CANVAS') container.removeChild(container.firstChild);
             container.appendChild(renderer.domElement);
@@ -130,6 +132,12 @@
             // Add Lights
             scene.add(new THREE.AmbientLight(0xffffff, 0.1));
             const sunLight = new THREE.PointLight(0xffffff, 2.5, 100);
+            sunLight.castShadow = true;
+            sunLight.shadow.mapSize.width = 1024;
+            sunLight.shadow.mapSize.height = 1024;
+            sunLight.shadow.camera.near = 0.5;
+            sunLight.shadow.camera.far = 100;
+            sunLight.name = "sunLight";
             scene.add(sunLight);
 
             // Add post-processing for bloom effect
@@ -188,17 +196,19 @@
                 emissiveMap: sunEmissiveTexture
             });
             sun = new THREE.Mesh(sunGeometry, sunMaterial);
+            sun.castShadow = true;
+            sun.receiveShadow = false;
             scene.add(sun);
-            sun.add(scene.getObjectByName('sunLight')); // Add light to sun for local illumination
+            sun.add(scene.getObjectByName('sunLight'));
 
             // Create planets
             const planetData = [
                 { name: 'mercury', distance: 3.5, size: 0.2, speed: 0.025,
                   textures: { map: 'mercury_texture.jpg', bump: 'mercury_bump.jpg', emissive: 'mercury_emissive.jpg' } },
                 { name: 'venus', distance: 5.5, size: 0.4, speed: 0.018,
-                  textures: { map: 'venus_texture.jpg', bump: 'venus_bump.jpg', emissive: 'venus_emissive.jpg' } },
+                  textures: { map: 'venus_texture.jpg', bump: 'venus_bump.jpg', emissive: 'venus_emissive.jpg', atmosphere: 'venus_clouds.jpg' } },
                 { name: 'earth', distance: 7.5, size: 0.45, speed: 0.015,
-                  textures: { map: 'earth_texture.jpg', bump: 'earth_bump.jpg', spec: 'earth_spec.jpg', emissive: 'earth_emissive.jpg' } },
+                  textures: { map: 'earth_texture.jpg', bump: 'earth_bump.jpg', spec: 'earth_spec.jpg', emissive: 'earth_emissive.jpg', atmosphere: 'earth_clouds.jpg' } },
                 { name: 'mars', distance: 9.5, size: 0.3, speed: 0.012,
                   textures: { map: 'mars_texture.jpg', bump: 'mars_bump.jpg', emissive: 'mars_emissive.jpg' } },
                 { name: 'jupiter', distance: 13, size: 1.2, speed: 0.008,
@@ -213,6 +223,7 @@
             ];
 
             planetData.forEach(data => {
+                // Main Planet Mesh
                 const planetGeo = new THREE.SphereGeometry(data.size, 64, 64);
                 
                 const materialOptions = {
@@ -230,12 +241,28 @@
                 if (data.textures.spec) {
                     materialOptions.specularMap = textureLoader.load(data.textures.spec);
                 }
-
                 const planetMat = new THREE.MeshStandardMaterial(materialOptions);
                 const planetMesh = new THREE.Mesh(planetGeo, planetMat);
                 planetMesh.userData = data;
+                planetMesh.castShadow = true;
+                planetMesh.receiveShadow = true;
                 planets.push(planetMesh);
                 scene.add(planetMesh);
+
+                // Add Atmosphere/Clouds
+                if (data.textures.atmosphere) {
+                    const atmosphereGeo = new THREE.SphereGeometry(data.size * 1.02, 64, 64);
+                    const atmosphereMat = new THREE.MeshStandardMaterial({
+                        map: textureLoader.load(data.textures.atmosphere),
+                        transparent: true,
+                        opacity: 0.6,
+                        blending: THREE.AdditiveBlending
+                    });
+                    const atmosphereMesh = new THREE.Mesh(atmosphereGeo, atmosphereMat);
+                    atmosphereMesh.userData.isAtmosphere = true; // Mark as atmosphere for rotation
+                    atmosphereMesh.userData.orbitSpeed = data.speed;
+                    planetMesh.add(atmosphereMesh);
+                }
 
                 // Add orbital path
                 const orbitGeometry = new THREE.RingGeometry(data.distance - 0.01, data.distance + 0.01, 128);
@@ -255,6 +282,7 @@
                     });
                     const rings = new THREE.Mesh(ringGeo, ringMat);
                     rings.rotation.x = Math.PI / 2 - 0.2;
+                    rings.receiveShadow = true; // Rings can receive shadows
                     planetMesh.add(rings);
                 }
             });
@@ -273,7 +301,15 @@
                 const { speed, distance } = planet.userData;
                 planet.position.x = Math.sin(elapsed * speed) * distance;
                 planet.position.z = Math.cos(elapsed * speed) * distance;
-                planet.rotation.y += 0.005;
+                
+                planet.rotation.y += 0.005; // Make planet rotate on its own axis
+                
+                // Animate the atmosphere layer
+                planet.children.forEach(child => {
+                    if (child.userData.isAtmosphere) {
+                        child.rotation.y += 0.006; // Rotate atmosphere faster than the planet
+                    }
+                });
             });
 
             if (stars) {
@@ -281,7 +317,7 @@
             }
 
             controls.update();
-            composer.render(); // Render the scene with the bloom effect
+            composer.render();
         }
 
         // ---------- Event Listeners ----------
@@ -290,7 +326,7 @@
             camera.aspect = container.clientWidth / container.clientHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(container.clientWidth, container.clientHeight);
-            composer.setSize(container.clientWidth, container.clientHeight); // Resize the composer too
+            composer.setSize(container.clientWidth, container.clientHeight);
         }
         window.addEventListener('resize', onWindowResize, false);
 
