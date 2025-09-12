@@ -1,177 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Suraj Solanki - Infinite Ideas ♾️</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Solar System</title>
   <style>
-    :root{
-      --yellow-primary:#FFD400;
-      --yellow-accent:#FFB100;
-      --dark:#1A1A1A;
-      --light:#FFFDEB;
-      --highlight:#FF6B00;
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:'Poppins',sans-serif;background:linear-gradient(180deg,var(--light),#fff);color:var(--dark);
-      overflow-x:hidden;
-    }
-    header{
-      background:linear-gradient(90deg,var(--yellow-primary),var(--yellow-accent));
-      text-align:center;padding:2rem 1rem;position:relative;overflow:hidden;
-    }
-    header::after{
-      content:"";position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:rgba(255,255,255,0.25);border-radius:50%;filter:blur(30px);
-    }
-    .brand{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap}
-    .logo-mark{
-      background:var(--dark);
-      padding:1rem;
-      border-radius:50%;
-      box-shadow:0 0 20px rgba(255,212,0,0.8), 0 0 40px rgba(255,212,0,0.5);
-      display:flex;align-items:center;justify-content:center;
-      animation: pulse 2s infinite;
-    }
-    .logo-mark svg{
-      width:30px;height:30px;fill:var(--yellow-primary);
-    }
-    @keyframes pulse {
-      0%, 100% {transform: scale(1); box-shadow:0 0 15px rgba(255,212,0,0.6), 0 0 35px rgba(255,212,0,0.4);}
-      50% {transform: scale(1.1); box-shadow:0 0 35px rgba(255,212,0,1), 0 0 60px rgba(255,212,0,0.7);}
-    }
-    h1{font-size:2.5rem;background:linear-gradient(90deg,#000,#4a4a4a);-webkit-background-clip:text;color:transparent}
-    .tagline{font-weight:600;margin-top:4px;color:#333}
-
-    .hero{
-      margin-top:1.2rem;max-width:950px;margin-left:auto;margin-right:auto;padding:1.5rem;background:rgba(255,255,255,0.6);backdrop-filter:blur(8px);border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,0.08);
-    }
-    .hero p{font-size:1.1rem;margin-bottom:1rem}
-    .cta{display:inline-block;background:var(--dark);color:#fff;padding:0.7rem 1.3rem;border-radius:999px;text-decoration:none;font-weight:700;margin-right:0.6rem;transition:0.3s}
-    .cta:hover{background:var(--highlight);transform:translateY(-2px);box-shadow:0 0 15px var(--highlight)}
-
-    main{max-width:1100px;margin:2rem auto;padding:0 1rem}
-    section.card{background:#fff;border-radius:16px;padding:1.4rem;margin-bottom:1.6rem;box-shadow:0 6px 20px rgba(0,0,0,0.08)}
-    h2{color:var(--yellow-accent);margin-bottom:0.8rem;font-size:1.6rem;text-shadow:0 0 8px rgba(255,212,0,0.5)}
-
-    .skills{display:flex;flex-wrap:wrap;gap:.6rem}
-    .chip{
-      background:linear-gradient(90deg,var(--yellow-primary),var(--yellow-accent));
-      padding:.45rem .9rem;
-      border-radius:999px;
-      color:#111;font-weight:700;
-      box-shadow:0 0 10px rgba(255,212,0,0.5);
-      transition:0.3s;
-    }
-    .chip:hover{
-      box-shadow:0 0 20px rgba(255,212,0,0.8), 0 0 40px rgba(255,212,0,0.6);
-      transform:scale(1.1);
-    }
-
-    .models-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
-    .model-card{border-radius:16px;overflow:hidden;background:#fff;transition:transform .3s ease,box-shadow .3s ease;cursor:pointer}
-    .model-card:hover{transform:scale(1.03);box-shadow:0 0 25px rgba(255,212,0,0.6)}
-    .model-thumb{height:240px;background:#FFF5CC;display:flex;align-items:center;justify-content:center;font-weight:700;color:#aaa;font-size:1.1rem}
-    .model-body{padding:0.9rem}
-
-    footer{text-align:center;margin-top:2rem;color:#666;font-size:0.9rem}
-
-    /* Mousemove glowing lightning effect */
-    .cursor-glow {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 50px;
-      height: 50px;
-      background: radial-gradient(circle, rgba(255,212,0,0.8) 0%, rgba(255,212,0,0) 70%);
-      pointer-events: none;
-      border-radius: 50%;
-      transform: translate(-50%, -50%) rotate(0deg);
-      mix-blend-mode: screen;
-      box-shadow:0 0 20px rgba(255,212,0,0.7), 0 0 40px rgba(255,212,0,0.5);
-      transition: transform 0.05s linear;
-      z-index: 1000;
-    }
+    body { margin: 0; }
+    canvas { display: block; }
   </style>
 </head>
 <body>
-  <div class="cursor-glow"></div>
-  <header>
-    <div class="brand">
-      <div class="logo-mark">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
-      </div>
-      <div>
-        <h1>Suraj <span style="color:var(--highlight)">Solanki</span></h1>
-        <div class="tagline">Infinite Ideas ♾️ | Software Engineer • UI/UX • SEO</div>
-      </div>
-    </div>
-    <div class="hero">
-      <p>I create cool digital products, eye-catching UI/UX, and result-driven marketing strategies. Currently pursuing <strong>MCA</strong> at Amity University Online and have a <strong>BCA</strong> from Savitribai Phule Pune University.</p>
-      <a href="#models" class="cta">Explore Models</a>
-      <a href="#projects" class="cta" style="background:var(--yellow-accent);color:#000">My Projects</a>
-    </div>
-  </header>
-
-  <main>
-    <section class="card" id="about">
-      <h2>About Me</h2>
-      <p>Hi! I'm <strong>Suraj Solanki</strong>, passionate about design, code, and digital growth. I blend creativity and logic to build interfaces and marketing strategies that stand out.</p>
-    </section>
-
-    <section class="card" id="skills">
-      <h2>Skills & Expertise</h2>
-      <div class="skills">
-        <div class="chip">Software Engineering</div>
-        <div class="chip">UI/UX Design</div>
-        <div class="chip">Digital Marketing</div>
-        <div class="chip">SEO Marketing</div>
-        <div class="chip">React / Node.js</div>
-        <div class="chip">Figma</div>
-      </div>
-    </section>
-
-    <section class="card" id="models">
-      <h2>Featured Models & Mockups</h2>
-      <div class="models-grid">
-        <div class="model-card" onclick="window.location.href='solar-system/solar-system.html';">
-          <div class="model-thumb">
-            <img src="images/solar-system-thumb.jpg" alt="An interactive 3D solar system with spinning planets."/>
-          </div>
-          <div class="model-body">
-            <h3>Interactive 3D Solar System</h3>
-            <p>A web-based 3D solar system built with Three.js, showcasing custom textures and visual effects.</p>
-          </div>
-        </div>
-        <div class="model-card">
-          <div class="model-thumb">
-            <img src="images/your-thumbnail-image.jpg" alt="A thumbnail for your next project."/>
-          </div>
-          <div class="model-body">
-            <h3>Your Next 3D Project</h3>
-            <p>A description of your next 3D model, like a bot or a car, to be displayed here.</p>
-          </div>
-        </div>
-        <div class="model-card"><div class="model-thumb">Model 3</div><div class="model-body"><h3>Lifestyle Shot</h3></div></div>
-        <div class="model-card"><div class="model-thumb">Model 4</div><div class="model-body"><h3>Editorial Style</h3></div></div>
-      </div>
-    </section>
-
-    <section class="card" id="projects">
-      <h2>Projects</h2>
-      <p>Coming soon! 🚀 I am working on cool UI revamps, Shopify stores, and SEO campaigns.</p>
-    </section>
-  </main>
-
-  <footer>
-    © 2025 Suraj Solanki — Built with Infinite Ideas ♾️
-  </footer>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-    const glow = document.querySelector('.cursor-glow');
-    document.addEventListener('mousemove', (e) => {
-      glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px) rotate(${e.clientX % 360}deg)`;
+    // Set up scene, camera, and renderer
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000); // Black background for space
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Add lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    scene.add(ambientLight);
+    const pointLight = new THREE.PointLight(0xffffff, 1.5, 500);
+    pointLight.position.set(0, 0, 0); // Position the light at the center for the sun
+    scene.add(pointLight);
+
+    // Create a new texture loader
+    const textureLoader = new THREE.TextureLoader();
+
+    // Create the Sun
+    const sunGeometry = new THREE.SphereGeometry(2, 32, 32);
+    const sunTexture = textureLoader.load('sun_texture.jpg');
+    const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
+    const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+    scene.add(sun);
+
+    // Create planets with their textures
+    const planets = [
+      { name: 'Mercury', distance: 4, size: 0.2, texture: 'mercury_texture.jpg', speed: 0.04 },
+      { name: 'Venus', distance: 6, size: 0.4, texture: 'venus_texture.jpg', speed: 0.03 },
+      { name: 'Earth', distance: 8, size: 0.5, texture: 'earth_texture.jpg', speed: 0.02 },
+      { name: 'Mars', distance: 10, size: 0.3, texture: 'mars_texture.jpg', speed: 0.015 },
+      { name: 'Jupiter', distance: 14, size: 1.2, texture: 'jupiter_texture.jpg', speed: 0.008 },
+      { name: 'Saturn', distance: 18, size: 1, texture: 'saturn_texture.jpg', speed: 0.006 },
+      { name: 'Uranus', distance: 22, size: 0.8, texture: 'uranus_texture.jpg', speed: 0.004 },
+      { name: 'Neptune', distance: 25, size: 0.7, texture: 'neptune_texture.jpg', speed: 0.003 }
+    ];
+
+    planets.forEach(p => {
+      const geometry = new THREE.SphereGeometry(p.size, 32, 32);
+      const material = new THREE.MeshStandardMaterial({ map: textureLoader.load(p.texture) });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.distance = p.distance;
+      mesh.speed = p.speed;
+      p.mesh = mesh;
+      scene.add(mesh);
+    });
+
+    // Add Saturn's rings
+    const saturnRingsGeometry = new THREE.RingGeometry(1.2, 1.8, 64);
+    const saturnRingsTexture = textureLoader.load('saturn_rings_texture.png');
+    const saturnRingsMaterial = new THREE.MeshBasicMaterial({ map: saturnRingsTexture, side: THREE.DoubleSide });
+    const saturnRings = new THREE.Mesh(saturnRingsGeometry, saturnRingsMaterial);
+    saturnRings.rotation.x = Math.PI / 2; // Lay the rings flat
+    scene.add(saturnRings);
+
+    camera.position.z = 30;
+
+    // Animation loop
+    const animate = () => {
+      requestAnimationFrame(animate);
+
+      // Rotate the sun
+      sun.rotation.y += 0.005;
+
+      // Rotate and orbit the planets
+      planets.forEach(p => {
+        const time = Date.now() * p.speed;
+        p.mesh.position.x = Math.cos(time) * p.distance;
+        p.mesh.position.z = Math.sin(time) * p.distance;
+        p.mesh.rotation.y += 0.01;
+      });
+
+      // Position Saturn's rings with Saturn
+      const saturnMesh = planets.find(p => p.name === 'Saturn').mesh;
+      saturnRings.position.copy(saturnMesh.position);
+
+      renderer.render(scene, camera);
+    };
+
+    animate();
+
+    // Handle window resizing
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
     });
   </script>
 </body>
