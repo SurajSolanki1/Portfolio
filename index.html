@@ -72,19 +72,7 @@
     .models-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
     .model-card{border-radius:16px;overflow:hidden;background:#fff;transition:transform .3s ease,box-shadow .3s ease;cursor:pointer}
     .model-card:hover{transform:scale(1.03);box-shadow:0 0 25px rgba(255,212,0,0.6)}
-    .model-thumb{
-      height:240px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:#FFF5CC;
-      overflow: hidden;
-    }
-    .model-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .model-thumb{height:240px;background:#FFF5CC;display:flex;align-items:center;justify-content:center;font-weight:700;color:#aaa;font-size:1.1rem}
     .model-body{padding:0.9rem}
 
     footer{text-align:center;margin-top:2rem;color:#666;font-size:0.9rem}
@@ -149,14 +137,22 @@
       <div class="models-grid">
         <div class="model-card" onclick="window.location.href='solar-system/solar-system.html';">
           <div class="model-thumb">
-            <img src="images/solar-system-thumb.jpg" alt="An interactive 3D solar system with spinning planets."/>
+            <img src="solar-system/solar-system-texture.jpg" alt="An interactive 3D solar system with spinning planets."/>
           </div>
           <div class="model-body">
             <h3>Interactive 3D Solar System</h3>
             <p>A web-based 3D solar system built with Three.js, showcasing custom textures and visual effects.</p>
           </div>
         </div>
-        <div class="model-card"><div class="model-thumb">Model 2</div><div class="model-body"><h3>Studio Portrait</h3></div></div>
+        <div class="model-card">
+          <div class="model-thumb">
+            <img src="images/your-thumbnail-image.jpg" alt="A thumbnail for your next project."/>
+          </div>
+          <div class="model-body">
+            <h3>Your Next 3D Project</h3>
+            <p>A description of your next 3D model, like a bot or a car, to be displayed here.</p>
+          </div>
+        </div>
         <div class="model-card"><div class="model-thumb">Model 3</div><div class="model-body"><h3>Lifestyle Shot</h3></div></div>
         <div class="model-card"><div class="model-thumb">Model 4</div><div class="model-body"><h3>Editorial Style</h3></div></div>
       </div>
