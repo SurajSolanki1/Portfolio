@@ -121,7 +121,7 @@
             while (container.firstChild && container.firstChild.tagName === 'CANVAS') container.removeChild(container.firstChild);
             container.appendChild(renderer.domElement);
 
-            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.08;
             controls.maxDistance = 150;
