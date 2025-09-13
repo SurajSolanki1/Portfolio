@@ -25,8 +25,8 @@
 
             const renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio); // Improve visual quality on high-res displays
-            renderer.physicallyCorrectLights = true; // Use physically correct lighting for PBR materials
+            renderer.setPixelRatio(window.devicePixelRatio); 
+            renderer.physicallyCorrectLights = true;
             document.body.appendChild(renderer.domElement);
 
             // Add OrbitControls for user interaction
@@ -45,15 +45,12 @@
             });
 
             // ------------------ LIGHTING ------------------
-            // Ambient light provides soft, non-directional illumination
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene.add(ambientLight);
 
-            // Hemisphere light to simulate a sky and ground light source
             const hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
             scene.add(hemisphereLight);
 
-            // A powerful point light to highlight the model
             const pointLight = new THREE.PointLight(0xffffff, 1, 100);
             pointLight.position.set(0, 5, 3);
             scene.add(pointLight);
@@ -95,18 +92,28 @@
                 'sword_of_miracle_free.glb',
                 function (gltf) {
                     sword = gltf.scene;
-                    
+
+                    // Get the bounding box of the entire model
                     const box = new THREE.Box3().setFromObject(sword);
-                    const size = box.getSize(new THREE.Vector3());
+                    const size = new THREE.Vector3();
+                    box.getSize(size);
 
-                    console.log('Sword model loaded successfully!');
-                    console.log('Model Size:', size);
-                    console.log('Model Position:', sword.position);
+                    // Normalize the model size to fit the scene
+                    const scaleFactor = 1.0 / size.y;
+                    sword.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
-                    sword.scale.set(0.5, 0.5, 0.5); 
-                    sword.rotation.y = Math.PI; 
-                    sword.position.y = 0.5;
-                    
+                    // Center the model's geometry and position it on the platform
+                    box.getCenter(sword.position);
+                    sword.position.y = 0.5; // Place on top of the platform
+
+                    // Rotate the sword to stand up correctly
+                    // We'll rotate the sword on its x-axis by 90 degrees (PI/2)
+                    sword.rotation.x = -Math.PI / 2;
+
+                    console.log('Sword model loaded and adjusted successfully!');
+                    console.log('Adjusted Model Size:', size.multiplyScalar(scaleFactor));
+                    console.log('Adjusted Model Position:', sword.position);
+
                     scene.add(sword);
                 },
                 undefined,
