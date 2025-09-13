@@ -10,10 +10,11 @@
     </style>
 </head>
 <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script>
+    <script type="module">
+        import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
+        import { OrbitControls } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/OrbitControls.js';
+        import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader.js';
+
         window.onload = function() {
             // Set up the scene, camera, and renderer
             const scene = new THREE.Scene();
@@ -27,7 +28,7 @@
             document.body.appendChild(renderer.domElement);
 
             // Add OrbitControls for user interaction
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
             controls.maxPolarAngle = Math.PI / 2;
@@ -63,7 +64,6 @@
                 platformMaterial = new THREE.MeshStandardMaterial({ color: 0x665544, roughness: 0.8, metalness: 0.1 });
             }
 
-            // Create tiered cylinders to simulate the shape
             const tier1Geometry = new THREE.CylinderGeometry(2.5, 2.8, 0.5, 64);
             const tier1 = new THREE.Mesh(tier1Geometry, platformMaterial);
             tier1.position.y = -1.25;
@@ -80,7 +80,7 @@
             scene.add(tier3);
             
             // ------------------ SWORD (LOAD GLB MODEL) ------------------
-            const loader = new THREE.GLTFLoader();
+            const loader = new GLTFLoader();
             let sword;
 
             loader.load(
@@ -88,7 +88,6 @@
                 function (gltf) {
                     sword = gltf.scene;
                     
-                    // Add a bounding box helper for visualization
                     const box = new THREE.Box3().setFromObject(sword);
                     const size = box.getSize(new THREE.Vector3());
 
@@ -96,14 +95,13 @@
                     console.log('Model Size:', size);
                     console.log('Model Position:', sword.position);
 
-                    // Adjust scale and position based on the console output
                     sword.scale.set(0.5, 0.5, 0.5); 
                     sword.rotation.y = Math.PI; 
                     sword.position.y = 0.5;
                     
                     scene.add(sword);
                 },
-                undefined, // progress
+                undefined,
                 function (error) {
                     console.error('An error happened loading the sword model:', error);
                 }
