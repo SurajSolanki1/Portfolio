@@ -77,17 +77,20 @@
 
     // Create planets with their textures
     const planets = [
-      { name: 'Mercury', distance: 4, size: 0.2, texture: 'mercury_texture.jpg', speed: 0.04 },
-      { name: 'Venus', distance: 6, size: 0.4, texture: 'venus_texture.jpg', speed: 0.03 },
-      { name: 'Earth', distance: 8, size: 0.5, texture: 'earth_texture.jpg', speed: 0.02 },
-      { name: 'Mars', distance: 10, size: 0.3, texture: 'mars_texture.jpg', speed: 0.015 },
-      { name: 'Jupiter', distance: 14, size: 1.2, texture: 'jupiter_texture.jpg', speed: 0.008 },
-      { name: 'Saturn', distance: 18, size: 1, texture: 'saturn_texture.jpg', speed: 0.006 },
-      { name: 'Uranus', distance: 22, size: 0.8, texture: 'uranus_texture.jpg', speed: 0.004 },
-      { name: 'Neptune', distance: 25, size: 0.7, texture: 'neptune_texture.jpg', speed: 0.003 }
+      { name: 'Mercury', distance: 4, size: 0.2, texture: 'mercury_texture.jpg', speed: 0.004 },
+      { name: 'Venus', distance: 6, size: 0.4, texture: 'venus_texture.jpg', speed: 0.003 },
+      { name: 'Earth', distance: 8, size: 0.5, texture: 'earth_texture.jpg', speed: 0.002 },
+      { name: 'Mars', distance: 10, size: 0.3, texture: 'mars_texture.jpg', speed: 0.0015 },
+      { name: 'Jupiter', distance: 14, size: 1.2, texture: 'jupiter_texture.jpg', speed: 0.0008 },
+      { name: 'Saturn', distance: 18, size: 1, texture: 'saturn_texture.jpg', speed: 0.0006 },
+      { name: 'Uranus', distance: 22, size: 0.8, texture: 'uranus_texture.jpg', speed: 0.0004 },
+      { name: 'Neptune', distance: 25, size: 0.7, texture: 'neptune_texture.jpg', speed: 0.0003 }
     ];
 
+    // Create orbits and planets
+    const orbits = new THREE.Group();
     planets.forEach(p => {
+      // Create Planet
       const geometry = new THREE.SphereGeometry(p.size, 32, 32);
       const material = new THREE.MeshStandardMaterial({ map: textureLoader.load(p.texture) });
       const mesh = new THREE.Mesh(geometry, material);
@@ -95,7 +98,15 @@
       mesh.speed = p.speed;
       p.mesh = mesh;
       scene.add(mesh);
+
+      // Create Orbit Line
+      const orbitGeometry = new THREE.TorusGeometry(p.distance, 0.02, 16, 100);
+      const orbitMaterial = new THREE.MeshBasicMaterial({ color: 0x555555, transparent: true, opacity: 0.5 });
+      const orbit = new THREE.Mesh(orbitGeometry, orbitMaterial);
+      orbit.rotation.x = Math.PI / 2; // Lay the orbit flat
+      orbits.add(orbit);
     });
+    scene.add(orbits);
 
     // Add Saturn's rings
     const saturnRingsGeometry = new THREE.RingGeometry(1.2, 1.8, 64);
