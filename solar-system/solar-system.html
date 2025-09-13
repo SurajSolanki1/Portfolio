@@ -207,4 +207,62 @@
             const ringTexture = textureLoader.load(data.ringTexture);
             const ringGeometry = new THREE.RingGeometry(data.size * 1.2, data.size * 2.5, 64);
             const ringMaterial = new THREE.MeshBasicMaterial({ 
-                map: ringTexture,
+                map: ringTexture, 
+                side: THREE.DoubleSide,
+                transparent: true
+            });
+            const rings = new THREE.Mesh(ringGeometry, ringMaterial);
+            rings.rotation.x = Math.PI / 2 - 0.2;
+            planetMesh.add(rings);
+        }
+      });
+    }
+
+    function animate(){
+      animationId = requestAnimationFrame(animate);
+      
+      const elapsed = clock.getElapsedTime();
+
+      planets.forEach(planet => {
+        const speed = planet.userData.speed;
+        const distance = planet.userData.distance;
+        
+        planet.position.x = Math.sin(elapsed * speed) * distance;
+        planet.position.z = Math.cos(elapsed * speed) * distance;
+        planet.rotation.y += speed * 0.5;
+      });
+
+      if (stars) {
+        stars.rotation.y += 0.0002;
+      }
+      sun.rotation.y += 0.001;
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function onWindowResize(){
+      if (!renderer) return;
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+    window.addEventListener('resize', onWindowResize, false);
+
+    try {
+      initScene();
+    } catch (err){
+      showError('Initialization error: ' + (err && err.message ? err.message : String(err)));
+    }
+
+    btnSwitch.addEventListener('click', ()=>{
+      hideError();
+      cancelAnimationFrame(animationId);
+      try { initScene(); } catch(e){ showError('Retry failed: ' + e.message); }
+    });
+
+    console.log('Three.js revision:', THREE && THREE.REVISION);
+    console.log('If nothing appears: 1) Run file via http server; 2) Open console (F12) and copy errors here; 3) Try Chrome/Edge/Firefox with hardware acceleration enabled.');
+  </script>
+</body>
+</html>
