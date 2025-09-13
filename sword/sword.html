@@ -58,15 +58,7 @@
             const textureLoader = new THREE.TextureLoader();
             
             let platformMaterial;
-            try {
-                const stoneTexture = textureLoader.load('stone_texture.png'); 
-                stoneTexture.wrapS = stoneTexture.wrapT = THREE.RepeatWrapping;
-                stoneTexture.repeat.set(2, 2);
-                platformMaterial = new THREE.MeshStandardMaterial({ map: stoneTexture, roughness: 0.8, metalness: 0.1 });
-            } catch (e) {
-                console.warn("stone_texture.png not found. Using solid color for platform.");
-                platformMaterial = new THREE.MeshStandardMaterial({ color: 0x665544, roughness: 0.8, metalness: 0.1 });
-            }
+            platformMaterial = new THREE.MeshStandardMaterial({ color: 0x665544, roughness: 0.8, metalness: 0.1 });
 
             const tier1Geometry = new THREE.CylinderGeometry(2.5, 2.8, 0.5, 64);
             const tier1 = new THREE.Mesh(tier1Geometry, platformMaterial);
@@ -85,52 +77,28 @@
             
             // ------------------ SWORD (PLACEHOLDER) ------------------
             let sword;
-            try {
-                const swordTexture = textureLoader.load('1.png'); // Load your sword image
-                const swordMaterial = new THREE.MeshStandardMaterial({ map: swordTexture, roughness: 0.6, metalness: 0.3 });
-                // Simple box geometry for the sword blade and handle
-                const bladeGeometry = new THREE.BoxGeometry(0.15, 2.0, 0.15);
-                const handleGeometry = new THREE.BoxGeometry(0.3, 0.5, 0.15);
-                const crossguardGeometry = new THREE.BoxGeometry(0.8, 0.15, 0.15);
+            const solidSwordMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.6, metalness: 0.3 });
+             // Simple box geometry for the sword blade and handle
+            const bladeGeometry = new THREE.BoxGeometry(0.15, 2.0, 0.15);
+            const handleGeometry = new THREE.BoxGeometry(0.3, 0.5, 0.15);
+            const crossguardGeometry = new THREE.BoxGeometry(0.8, 0.15, 0.15);
 
-                const blade = new THREE.Mesh(bladeGeometry, swordMaterial);
-                const handle = new THREE.Mesh(handleGeometry, swordMaterial);
-                const crossguard = new THREE.Mesh(crossguardGeometry, swordMaterial);
+            const blade = new THREE.Mesh(bladeGeometry, solidSwordMaterial);
+            const handle = new THREE.Mesh(handleGeometry, solidSwordMaterial);
+            const crossguard = new THREE.Mesh(crossguardGeometry, solidSwordMaterial);
 
-                blade.position.y = 1.0; // Blade above origin
-                handle.position.y = -0.25; // Handle below origin
-                crossguard.position.y = 0.65; // Crossguard above handle
+            blade.position.y = 1.0; // Blade above origin
+            handle.position.y = -0.25; // Handle below origin
+            crossguard.position.y = 0.65; // Crossguard above handle
 
-                sword = new THREE.Group(); // Group all parts of the sword
-                sword.add(blade);
-                sword.add(handle);
-                sword.add(crossguard);
+            sword = new THREE.Group(); // Group all parts of the sword
+            sword.add(blade);
+            sword.add(handle);
+            sword.add(crossguard);
 
-                sword.position.y = 0.2; // Adjust sword group position to be on platform
-                scene.add(sword);
-                console.log('Placeholder sword added successfully!');
-            } catch (e) {
-                console.warn("1.png not found. Using solid color for placeholder sword.", e);
-                const solidSwordMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.6, metalness: 0.3 });
-                 // Simple box geometry for the sword blade and handle
-                const bladeGeometry = new THREE.BoxGeometry(0.15, 2.0, 0.15);
-                const handleGeometry = new THREE.BoxGeometry(0.3, 0.5, 0.15);
-                const crossguardGeometry = new THREE.BoxGeometry(0.8, 0.15, 0.15);
-
-                const blade = new THREE.Mesh(bladeGeometry, solidSwordMaterial);
-                const handle = new THREE.Mesh(handleGeometry, solidSwordMaterial);
-                const crossguard = new THREE.Mesh(crossguardGeometry, solidSwordMaterial);
-
-                sword = new THREE.Group(); // Group all parts of the sword
-                sword.add(blade);
-                sword.add(handle);
-                sword.add(crossguard);
-
-                sword.position.y = 0.2; // Adjust sword group position to be on platform
-                scene.add(sword);
-            }
+            sword.position.y = 0.2; // Adjust sword group position to be on platform
+            scene.add(sword);
             
-
             // ------------------ ANIMATION LOOP ------------------
             const animate = () => {
                 requestAnimationFrame(animate);
