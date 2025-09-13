@@ -1,62 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>3D Solar System</title>
-    <style>
-        body { margin: 0; }
-        canvas { display: block; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Solar System</title>
+  <style>
+    body { margin: 0; }
+    canvas { display: block; }
+  </style>
 </head>
 <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // Set up scene, camera, and renderer
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000); // Black background for space
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-        const loader = new THREE.TextureLoader();
+    // Add lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    scene.add(ambientLight);
+    const pointLight = new THREE.PointLight(0xffffff, 1.5, 500);
+    pointLight.position.set(0, 0, 0); // Position the light at the center for the sun
+    scene.add(pointLight);
 
-        // Create Sun
-        const sunGeometry = new THREE.SphereGeometry(2, 32, 32);
-        const sunTexture = loader.load('sun.jpg');
-        const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
-        const sun = new THREE.Mesh(sunGeometry, sunMaterial);
-        scene.add(sun);
+    // Create a new texture loader
+    const textureLoader = new THREE.TextureLoader();
 
-        // Create Earth
-        const earthGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-        const earthTexture = loader.load('earth_texture.jpg');
-        const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture });
-        const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-        scene.add(earth);
+    // Create the Sun
+    const sunGeometry = new THREE.SphereGeometry(2, 32, 32);
+    const sunTexture = textureLoader.load('sun_texture.jpg');
+    const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
+    const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+    scene.add(sun);
 
-        // Lighting
-        const pointLight = new THREE.PointLight(0xFFFFFF, 2, 300);
-        scene.add(pointLight);
+    // Create planets with their textures
+    const planets = [
+      { name: 'Mercury', distance: 4, size: 0.2, texture: 'mercury_texture.jpg', speed: 0.04 },
+      { name: 'Venus', distance: 6, size: 0.4, texture: 'venus_texture.jpg', speed: 0.03 },
+      { name: 'Earth', distance: 8, size: 0.5, texture: 'earth_texture.jpg', speed: 0.02 },
+      { name: 'Mars', distance: 10, size: 0.3, texture: 'mars_texture.jpg', speed: 0.015 },
+      { name: 'Jupiter', distance: 14, size: 1.2, texture: 'jupiter_texture.jpg', speed: 0.008 },
+      { name: 'Saturn', distance: 18, size: 1, texture: 'saturn_texture.jpg', speed: 0.006 },
+      { name: 'Uranus', distance: 22, size: 0.8, texture: 'uranus_texture.jpg', speed: 0.004 },
+      { name: 'Neptune', distance: 25, size: 0.7, texture: 'neptune_texture.jpg', speed: 0.003 }
+    ];
 
-        // Camera position
-        camera.position.z = 10;
-        
-        // Planet orbital path (simplified)
-        const earthOrbitRadius = 5;
-        
-        function animate() {
-            requestAnimationFrame(animate);
+    planets.forEach(p => {
+      const geometry = new THREE.SphereGeometry(p.size, 32, 32);
+      const material = new THREE.MeshStandardMaterial({ map: textureLoader.load(p.texture) });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.distance = p.distance;
+      mesh.speed = p.speed;
+      p.mesh = mesh;
+      scene.add(mesh);
+    });
 
-            // Rotate planets
-            sun.rotation.y += 0.005;
-            earth.rotation.y += 0.02;
+    // Add Saturn's rings
+    const saturnRingsGeometry = new THREE.RingGeometry(1.2, 1.8, 64);
+    const saturnRingsTexture = textureLoader.load('saturn_rings_texture.png');
+    const saturnRingsMaterial = new THREE.MeshBasicMaterial({ map: saturnRingsTexture, side: THREE.DoubleSide });
+    const saturnRings = new THREE.Mesh(saturnRingsGeometry, saturnRingsMaterial);
+    saturnRings.rotation.x = Math.PI / 2; // Lay the rings flat
+    scene.add(saturnRings);
 
-            // Animate Earth's orbit
-            earth.position.x = Math.cos(Date.now() * 0.0005) * earthOrbitRadius;
-            earth.position.z = Math.sin(Date.now() * 0.0005) * earthOrbitRadius;
+    camera.position.z = 30;
 
-            renderer.render(scene, camera);
-        }
+    // Animation loop
+    const animate = () => {
+      requestAnimationFrame(animate);
 
-        animate();
-    </script>
+      // Rotate the sun
+      sun.rotation.y += 0.005;
+
+      // Rotate and orbit the planets
+      planets.forEach(p => {
+        const time = Date.now() * p.speed;
+        p.mesh.position.x = Math.cos(time) * p.distance;
+        p.mesh.position.z = Math.sin(time) * p.distance;
+        p.mesh.rotation.y += 0.01;
+      });
+
+      // Position Saturn's rings with Saturn
+      const saturnMesh = planets.find(p => p.name === 'Saturn').mesh;
+      saturnRings.position.copy(saturnMesh.position);
+
+      renderer.render(scene, camera);
+    };
+
+    animate();
+
+    // Handle window resizing
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
 </body>
 </html>
