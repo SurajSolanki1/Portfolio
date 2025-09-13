@@ -1,113 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Sword and the Stone</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sword and the Stone</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
 </head>
 <body>
-    <script type="module">
-        import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
-        import { OrbitControls } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/OrbitControls.js';
+    <script type="module">
+        import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
+        import { OrbitControls } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/OrbitControls.js';
 
-        window.onload = function() {
-            // Set up the scene, camera, and renderer
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x1a1a1a);
-            
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 3, 5);
+        window.onload = function() {
+            // Set up the scene, camera, and renderer
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a1a1a);
+            
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 3, 5);
 
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio); 
-            renderer.physicallyCorrectLights = true;
-            document.body.appendChild(renderer.domElement);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio); 
+            renderer.physicallyCorrectLights = true;
+            document.body.appendChild(renderer.domElement);
 
-            // Add OrbitControls for user interaction
-            const controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.maxPolarAngle = Math.PI / 2;
-            controls.minDistance = 3;
-            controls.maxDistance = 10;
+            // Add OrbitControls for user interaction
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2;
+            controls.minDistance = 3;
+            controls.maxDistance = 10;
 
-            // Handle window resizing
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
+            // Handle window resizing
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
 
-            // ------------------ LIGHTING ------------------
-            const ambientLight = new THREE.AmbientLight(0xffffff, 2.0);
-            scene.add(ambientLight);
+            // ------------------ LIGHTING ------------------
+            const ambientLight = new THREE.AmbientLight(0xffffff, 2.0);
+            scene.add(ambientLight);
 
-            const hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1.5);
-            scene.add(hemisphereLight);
+            const hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1.5);
+            scene.add(hemisphereLight);
 
-            const pointLight = new THREE.PointLight(0xffffff, 5, 100);
-            pointLight.position.set(0, 5, 3);
-            scene.add(pointLight);
+            const pointLight = new THREE.PointLight(0xffffff, 5, 100);
+            pointLight.position.set(0, 5, 3);
+            scene.add(pointLight);
 
-            // ------------------ PLATFORM ------------------
-            const textureLoader = new THREE.TextureLoader();
-            
-            let platformMaterial;
-            platformMaterial = new THREE.MeshStandardMaterial({ color: 0x808080, roughness: 0.8, metalness: 0.1 });
+            // ------------------ PLATFORM ------------------
+            let platformMaterial = new THREE.MeshStandardMaterial({ color: 0x808080, roughness: 0.8, metalness: 0.1 });
 
-            const tier1Geometry = new THREE.CylinderGeometry(2.5, 2.8, 0.5, 64);
-            const tier1 = new THREE.Mesh(tier1Geometry, platformMaterial);
-            tier1.position.y = -1.25;
-            scene.add(tier1);
+            const tier1Geometry = new THREE.CylinderGeometry(2.5, 2.8, 0.5, 64);
+            const tier1 = new THREE.Mesh(tier1Geometry, platformMaterial);
+            tier1.position.y = -1.25;
+            scene.add(tier1);
 
-            const tier2Geometry = new THREE.CylinderGeometry(2.0, 2.3, 0.4, 64);
-            const tier2 = new THREE.Mesh(tier2Geometry, platformMaterial);
-            tier2.position.y = -0.7;
-            scene.add(tier2);
+            const tier2Geometry = new THREE.CylinderGeometry(2.0, 2.3, 0.4, 64);
+            const tier2 = new THREE.Mesh(tier2Geometry, platformMaterial);
+            tier2.position.y = -0.7;
+            scene.add(tier2);
 
-            const tier3Geometry = new THREE.CylinderGeometry(1.5, 1.8, 0.3, 64);
-            const tier3 = new THREE.Mesh(tier3Geometry, platformMaterial);
-            tier3.position.y = -0.25;
-            scene.add(tier3);
-            
-            // ------------------ SWORD (PLACEHOLDER) ------------------
-            let sword;
-            const solidSwordMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, roughness: 0.6, metalness: 0.3 });
-             // Simple box geometry for the sword blade and handle
-            const bladeGeometry = new THREE.BoxGeometry(0.15, 2.0, 0.15);
-            const handleGeometry = new THREE.BoxGeometry(0.3, 0.5, 0.15);
-            const crossguardGeometry = new THREE.BoxGeometry(0.8, 0.15, 0.15);
+            const tier3Geometry = new THREE.CylinderGeometry(1.5, 1.8, 0.3, 64);
+            const tier3 = new THREE.Mesh(tier3Geometry, platformMaterial);
+            tier3.position.y = -0.25;
+            scene.add(tier3);
+            
+            // ------------------ SWORD (PLACEHOLDER) ------------------
+            let sword;
+            const solidSwordMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, roughness: 0.6, metalness: 0.3 });
+            const bladeGeometry = new THREE.BoxGeometry(0.15, 2.0, 0.15);
+            const handleGeometry = new THREE.BoxGeometry(0.3, 0.5, 0.15);
+            const crossguardGeometry = new THREE.BoxGeometry(0.8, 0.15, 0.15);
 
-            const blade = new THREE.Mesh(bladeGeometry, solidSwordMaterial);
-            const handle = new THREE.Mesh(handleGeometry, solidSwordMaterial);
-            const crossguard = new THREE.Mesh(crossguardGeometry, solidSwordMaterial);
+            const blade = new THREE.Mesh(bladeGeometry, solidSwordMaterial);
+            const handle = new THREE.Mesh(handleGeometry, solidSwordMaterial);
+            const crossguard = new THREE.Mesh(crossguardGeometry, solidSwordMaterial);
 
-            blade.position.y = 1.0; // Blade above origin
-            handle.position.y = -0.25; // Handle below origin
-            crossguard.position.y = 0.65; // Crossguard above handle
+            blade.position.y = 1.0;
+            handle.position.y = -0.25;
+            crossguard.position.y = 0.65;
 
-            sword = new THREE.Group(); // Group all parts of the sword
-            sword.add(blade);
-            sword.add(handle);
-            sword.add(crossguard);
+            sword = new THREE.Group();
+            sword.add(blade);
+            sword.add(handle);
+            sword.add(crossguard);
 
-            sword.position.y = 0.2; // Adjust sword group position to be on platform
-            scene.add(sword);
-            
-            // ------------------ ANIMATION LOOP ------------------
-            const animate = () => {
-                requestAnimationFrame(animate);
-                controls.update();
-                renderer.render(scene, camera);
-            };
+            sword.position.y = 0.2;
+            scene.add(sword);
+            
+            // ------------------ ANIMATION LOOP ------------------
+            const animate = () => {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            };
 
-            animate();
-        };
-    </script>
+            animate();
+        };
+    </script>
 </body>
 </html>
