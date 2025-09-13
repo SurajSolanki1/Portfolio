@@ -160,7 +160,7 @@
     function addSolarSystem(){
       // Create the Sun
       const sunGeometry = new THREE.SphereGeometry(1.5, 64, 64);
-      const sunTexture = textureLoader.load('https://www.solarsystemscope.com/textures/download/2k_sun.jpg');
+      const sunTexture = textureLoader.load('images/2k_sun.jpg');
       const sunMaterial = new THREE.MeshBasicMaterial({ 
           map: sunTexture,
           emissive: 0xffe87c, 
@@ -173,14 +173,14 @@
       sun.add(sunLight);
 
       const planetData = [
-        { name: 'mercury', distance: 3.5, size: 0.2, texture: 'https://www.solarsystemscope.com/textures/download/2k_mercury.jpg', speed: 0.025 },
-        { name: 'venus', distance: 5.5, size: 0.4, texture: 'https://www.solarsystemscope.com/textures/download/2k_venus_surface.jpg', speed: 0.018 },
-        { name: 'earth', distance: 7.5, size: 0.45, texture: 'https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg', speed: 0.015 },
-        { name: 'mars', distance: 9.5, size: 0.3, texture: 'https://www.solarsystemscope.com/textures/download/2k_mars.jpg', speed: 0.012 },
-        { name: 'jupiter', distance: 13, size: 1.2, texture: 'https://www.solarsystemscope.com/textures/download/2k_jupiter.jpg', speed: 0.008 },
-        { name: 'saturn', distance: 17, size: 1.0, texture: 'https://www.solarsystemscope.com/textures/download/2k_saturn.jpg', ringTexture: 'https://www.solarsystemscope.com/textures/download/2k_saturn_ring_alpha.png', speed: 0.006 },
-        { name: 'uranus', distance: 20.5, size: 0.8, texture: 'https://www.solarsystemscope.com/textures/download/2k_uranus.jpg', speed: 0.004 },
-        { name: 'neptune', distance: 24, size: 0.75, texture: 'https://www.solarsystemscope.com/textures/download/2k_neptune.jpg', speed: 0.002 }
+        { name: 'mercury', distance: 3.5, size: 0.2, texture: 'images/2k_mercury.jpg', speed: 0.025 },
+        { name: 'venus', distance: 5.5, size: 0.4, texture: 'images/2k_venus_surface.jpg', speed: 0.018 },
+        { name: 'earth', distance: 7.5, size: 0.45, texture: 'images/2k_earth_daymap.jpg', speed: 0.015 },
+        { name: 'mars', distance: 9.5, size: 0.3, texture: 'images/2k_mars.jpg', speed: 0.012 },
+        { name: 'jupiter', distance: 13, size: 1.2, texture: 'images/2k_jupiter.jpg', speed: 0.008 },
+        { name: 'saturn', distance: 17, size: 1.0, texture: 'images/2k_saturn.jpg', ringTexture: 'images/2k_saturn_ring_alpha.png', speed: 0.006 },
+        { name: 'uranus', distance: 20.5, size: 0.8, texture: 'images/2k_uranus.jpg', speed: 0.004 },
+        { name: 'neptune', distance: 24, size: 0.75, texture: 'images/2k_neptune.jpg', speed: 0.002 }
       ];
 
       planetData.forEach(data => {
