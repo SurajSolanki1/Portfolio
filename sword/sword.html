@@ -1,136 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Sword and the Stone</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sword and the Stone</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
 </head>
 <body>
-    <script type="module">
-        import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
-        import { OrbitControls } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/OrbitControls.js';
-        import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader.js';
+    <script type="module">
+        import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
+        import { OrbitControls } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/OrbitControls.js';
 
-        window.onload = function() {
-            // Set up the scene, camera, and renderer
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x1a1a1a);
-            
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 3, 5);
+        window.onload = function() {
+            // Set up the scene, camera, and renderer
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a1a1a);
+            
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 3, 5);
 
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio); 
-            renderer.physicallyCorrectLights = true;
-            document.body.appendChild(renderer.domElement);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio); 
+            renderer.physicallyCorrectLights = true;
+            document.body.appendChild(renderer.domElement);
 
-            // Add OrbitControls for user interaction
-            const controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.maxPolarAngle = Math.PI / 2;
-            controls.minDistance = 3;
-            controls.maxDistance = 10;
+            // Add OrbitControls for user interaction
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2;
+            controls.minDistance = 3;
+            controls.maxDistance = 10;
 
-            // Handle window resizing
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
+            // Handle window resizing
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
 
-            // ------------------ LIGHTING ------------------
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            scene.add(ambientLight);
+            // ------------------ LIGHTING ------------------
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
 
-            const hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
-            scene.add(hemisphereLight);
+            const hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+            scene.add(hemisphereLight);
 
-            const pointLight = new THREE.PointLight(0xffffff, 1, 100);
-            pointLight.position.set(0, 5, 3);
-            scene.add(pointLight);
+            const pointLight = new THREE.PointLight(0xffffff, 1, 100);
+            pointLight.position.set(0, 5, 3);
+            scene.add(pointLight);
 
-            // ------------------ PLATFORM ------------------
-            const textureLoader = new THREE.TextureLoader();
-            
-            let platformMaterial;
-            try {
-                const stoneTexture = textureLoader.load('stone_texture.jpg'); 
-                stoneTexture.wrapS = stoneTexture.wrapT = THREE.RepeatWrapping;
-                stoneTexture.repeat.set(2, 2);
-                platformMaterial = new THREE.MeshStandardMaterial({ map: stoneTexture, roughness: 0.8, metalness: 0.1 });
-            } catch (e) {
-                console.warn("stone_texture.jpg not found. Using solid color for platform.");
-                platformMaterial = new THREE.MeshStandardMaterial({ color: 0x665544, roughness: 0.8, metalness: 0.1 });
-            }
+            // ------------------ PLATFORM ------------------
+            const textureLoader = new THREE.TextureLoader();
+            
+            let platformMaterial;
+            try {
+                const stoneTexture = textureLoader.load('stone_texture.png'); 
+                stoneTexture.wrapS = stoneTexture.wrapT = THREE.RepeatWrapping;
+                stoneTexture.repeat.set(2, 2);
+                platformMaterial = new THREE.MeshStandardMaterial({ map: stoneTexture, roughness: 0.8, metalness: 0.1 });
+            } catch (e) {
+                console.warn("stone_texture.png not found. Using solid color for platform.");
+                platformMaterial = new THREE.MeshStandardMaterial({ color: 0x665544, roughness: 0.8, metalness: 0.1 });
+            }
 
-            const tier1Geometry = new THREE.CylinderGeometry(2.5, 2.8, 0.5, 64);
-            const tier1 = new THREE.Mesh(tier1Geometry, platformMaterial);
-            tier1.position.y = -1.25;
-            scene.add(tier1);
+            const tier1Geometry = new THREE.CylinderGeometry(2.5, 2.8, 0.5, 64);
+            const tier1 = new THREE.Mesh(tier1Geometry, platformMaterial);
+            tier1.position.y = -1.25;
+            scene.add(tier1);
 
-            const tier2Geometry = new THREE.CylinderGeometry(2.0, 2.3, 0.4, 64);
-            const tier2 = new THREE.Mesh(tier2Geometry, platformMaterial);
-            tier2.position.y = -0.7;
-            scene.add(tier2);
+            const tier2Geometry = new THREE.CylinderGeometry(2.0, 2.3, 0.4, 64);
+            const tier2 = new THREE.Mesh(tier2Geometry, platformMaterial);
+            tier2.position.y = -0.7;
+            scene.add(tier2);
 
-            const tier3Geometry = new THREE.CylinderGeometry(1.5, 1.8, 0.3, 64);
-            const tier3 = new THREE.Mesh(tier3Geometry, platformMaterial);
-            tier3.position.y = -0.25;
-            scene.add(tier3);
-            
-            // ------------------ SWORD (LOAD GLB MODEL) ------------------
-            const loader = new GLTFLoader();
-            let sword;
+            const tier3Geometry = new THREE.CylinderGeometry(1.5, 1.8, 0.3, 64);
+            const tier3 = new THREE.Mesh(tier3Geometry, platformMaterial);
+            tier3.position.y = -0.25;
+            scene.add(tier3);
+            
+            // ------------------ SWORD (PLACEHOLDER) ------------------
+            let sword;
+            try {
+                const swordTexture = textureLoader.load('1.png'); // Load your sword image
+                const swordMaterial = new THREE.MeshStandardMaterial({ map: swordTexture, roughness: 0.6, metalness: 0.3 });
+                // Simple box geometry for the sword blade and handle
+                const bladeGeometry = new THREE.BoxGeometry(0.15, 2.0, 0.15);
+                const handleGeometry = new THREE.BoxGeometry(0.3, 0.5, 0.15);
+                const crossguardGeometry = new THREE.BoxGeometry(0.8, 0.15, 0.15);
 
-            loader.load(
-                'sword_of_miracle_free.glb',
-                function (gltf) {
-                    sword = gltf.scene;
+                const blade = new THREE.Mesh(bladeGeometry, swordMaterial);
+                const handle = new THREE.Mesh(handleGeometry, swordMaterial);
+                const crossguard = new THREE.Mesh(crossguardGeometry, swordMaterial);
 
-                    // Get the bounding box of the entire model
-                    const box = new THREE.Box3().setFromObject(sword);
-                    const size = new THREE.Vector3();
-                    box.getSize(size);
+                blade.position.y = 1.0; // Blade above origin
+                handle.position.y = -0.25; // Handle below origin
+                crossguard.position.y = 0.65; // Crossguard above handle
 
-                    // Normalize the model size to fit the scene
-                    const scaleFactor = 1.0 / size.y;
-                    sword.scale.set(scaleFactor, scaleFactor, scaleFactor);
+                sword = new THREE.Group(); // Group all parts of the sword
+                sword.add(blade);
+                sword.add(handle);
+                sword.add(crossguard);
 
-                    // Center the model's geometry and position it on the platform
-                    box.getCenter(sword.position);
-                    sword.position.y = 0.5; // Place on top of the platform
+                sword.position.y = 0.2; // Adjust sword group position to be on platform
+                scene.add(sword);
+                console.log('Placeholder sword added successfully!');
+            } catch (e) {
+                console.warn("1.png not found. Using solid color for placeholder sword.", e);
+                const solidSwordMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.6, metalness: 0.3 });
+                 // Simple box geometry for the sword blade and handle
+                const bladeGeometry = new THREE.BoxGeometry(0.15, 2.0, 0.15);
+                const handleGeometry = new THREE.BoxGeometry(0.3, 0.5, 0.15);
+                const crossguardGeometry = new THREE.BoxGeometry(0.8, 0.15, 0.15);
 
-                    // Rotate the sword to stand up correctly
-                    // We'll rotate the sword on its x-axis by 90 degrees (PI/2)
-                    sword.rotation.x = -Math.PI / 2;
+                const blade = new THREE.Mesh(bladeGeometry, solidSwordMaterial);
+                const handle = new THREE.Mesh(handleGeometry, solidSwordMaterial);
+                const crossguard = new THREE.Mesh(crossguardGeometry, solidSwordMaterial);
 
-                    console.log('Sword model loaded and adjusted successfully!');
-                    console.log('Adjusted Model Size:', size.multiplyScalar(scaleFactor));
-                    console.log('Adjusted Model Position:', sword.position);
+                sword = new THREE.Group(); // Group all parts of the sword
+                sword.add(blade);
+                sword.add(handle);
+                sword.add(crossguard);
 
-                    scene.add(sword);
-                },
-                undefined,
-                function (error) {
-                    console.error('An error happened loading the sword model:', error);
-                }
-            );
+                sword.position.y = 0.2; // Adjust sword group position to be on platform
+                scene.add(sword);
+            }
+            
 
-            // ------------------ ANIMATION LOOP ------------------
-            const animate = () => {
-                requestAnimationFrame(animate);
-                controls.update();
-                renderer.render(scene, camera);
-            };
+            // ------------------ ANIMATION LOOP ------------------
+            const animate = () => {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            };
 
-            animate();
-        };
-    </script>
+            animate();
+        };
+    </script>
 </body>
 </html>
