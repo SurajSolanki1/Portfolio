@@ -25,6 +25,8 @@
 
             const renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio); // Improve visual quality on high-res displays
+            renderer.physicallyCorrectLights = true; // Use physically correct lighting for PBR materials
             document.body.appendChild(renderer.domElement);
 
             // Add OrbitControls for user interaction
@@ -43,12 +45,18 @@
             });
 
             // ------------------ LIGHTING ------------------
+            // Ambient light provides soft, non-directional illumination
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene.add(ambientLight);
 
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-            directionalLight.position.set(5, 10, 5);
-            scene.add(directionalLight);
+            // Hemisphere light to simulate a sky and ground light source
+            const hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+            scene.add(hemisphereLight);
+
+            // A powerful point light to highlight the model
+            const pointLight = new THREE.PointLight(0xffffff, 1, 100);
+            pointLight.position.set(0, 5, 3);
+            scene.add(pointLight);
 
             // ------------------ PLATFORM ------------------
             const textureLoader = new THREE.TextureLoader();
