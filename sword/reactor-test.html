@@ -2,178 +2,161 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>3D Reactor with Charging Animation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Reactor Box</title>
   <style>
     body {
-      background: #000;
       margin: 0;
+      height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      transition: background 1.5s ease;
-      font-family: Arial, sans-serif;
+      background-color: #0a0a0a;
+      transition: background-color 3s ease-in-out;
     }
 
-    #three-container {
-      width: 350px;
-      height: 350px;
-      cursor: pointer;
-    }
-
-    /* Loading Bar Container */
-    .loading-wrapper {
+    .container {
       width: 300px;
+      height: 300px;
+      perspective: 800px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .box {
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid #888;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transform-style: preserve-3d;
+      box-shadow: 0 0 15px #222;
+      transition: box-shadow 2s ease-in-out, border-color 2s ease-in-out;
+    }
+
+    .reactor {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, rgba(255, 255, 0, 0.8), rgba(255, 255, 0, 0.2));
+      border-radius: 50%;
+      box-shadow: 0 0 25px rgba(255, 255, 0, 0.8);
+      animation: float 3s ease-in-out infinite;
+      cursor: pointer;
+      transition: box-shadow 2s ease-in-out, background 2s ease-in-out;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    /* Wires */
+    .wire {
+      position: absolute;
+      background: #666;
+      width: 4px;
+      height: 50px;
+      transition: background 2s ease-in-out;
+    }
+
+    .wire.top { top: -50px; left: 50%; transform: translateX(-50%); }
+    .wire.bottom { bottom: -50px; left: 50%; transform: translateX(-50%); }
+    .wire.left { left: -50px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+    .wire.right { right: -50px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+
+    /* Loading Screen */
+    .loading-screen {
+      position: absolute;
+      bottom: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 250px;
       height: 30px;
-      border: 2px solid #ffd400;
-      margin-top: 15px;
-      border-radius: 20px;
+      border: 2px solid #fff;
+      border-radius: 5px;
       overflow: hidden;
-      background: #111;
+      background: rgba(255, 255, 255, 0.1);
       display: none;
-      box-shadow: 0 0 15px rgba(255, 212, 0, 0.6);
+      align-items: center;
+      justify-content: flex-start;
     }
 
     .loading-bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #ffd400, #ffb100);
-      transition: width 0.1s ease;
-      box-shadow: 0 0 15px rgba(255, 212, 0, 0.7);
+      background: yellow;
+      transition: width 10s linear;
     }
 
-    .loading-text {
-      position: relative;
-      top: -26px;
-      text-align: center;
-      color: #ffd400;
-      font-weight: bold;
+    .percentage {
+      position: absolute;
+      right: 10px;
+      font-family: monospace;
+      color: yellow;
       font-size: 14px;
-      text-shadow: 0 0 8px rgba(255, 212, 0, 0.8);
     }
 
-    /* Bright theme after reactor fully charges */
-    .bright-theme {
-      background: #fff8e1;
+    /* Light Mode */
+    .light-mode {
+      background-color: #fef6d4 !important;
+    }
+
+    .light-mode .box {
+      box-shadow: 0 0 50px yellow;
+      border-color: yellow;
+    }
+
+    .light-mode .reactor {
+      box-shadow: 0 0 80px yellow;
+      background: radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 255, 0, 0.6));
+    }
+
+    .light-mode .wire {
+      background: yellow;
     }
   </style>
 </head>
 <body>
-  <div id="three-container"></div>
-  <div class="loading-wrapper">
-    <div class="loading-bar"></div>
-    <div class="loading-text">0%</div>
+  <div class="container">
+    <div class="box">
+      <div class="wire top"></div>
+      <div class="wire bottom"></div>
+      <div class="wire left"></div>
+      <div class="wire right"></div>
+      <div class="reactor" id="reactor"></div>
+      <div class="loading-screen" id="loadingScreen">
+        <div class="loading-bar" id="loadingBar"></div>
+        <div class="percentage" id="percentage">0%</div>
+      </div>
+    </div>
   </div>
 
-  <script type="module">
-    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js';
+  <script>
+    const reactor = document.getElementById('reactor');
+    const loadingScreen = document.getElementById('loadingScreen');
+    const loadingBar = document.getElementById('loadingBar');
+    const percentage = document.getElementById('percentage');
 
-    // Scene + Camera
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(350, 350);
-    document.getElementById('three-container').appendChild(renderer.domElement);
-
-    // Lighting
-    const ambient = new THREE.AmbientLight(0xffffff, 0.2);
-    scene.add(ambient);
-    const pointLight = new THREE.PointLight(0xffd700, 2, 50);
-    pointLight.position.set(0, 2, 4);
-    scene.add(pointLight);
-
-    // Transparent Box
-    const boxGeo = new THREE.BoxGeometry(3, 3, 3);
-    const boxMat = new THREE.MeshPhysicalMaterial({
-      color: 0x222200,
-      transparent: true,
-      opacity: 0.25,
-      roughness: 0.05,
-      metalness: 1,
-      transmission: 0.8,
-      clearcoat: 1,
-    });
-    const box = new THREE.Mesh(boxGeo, boxMat);
-    scene.add(box);
-
-    // Glowing Orb
-    const orbGeo = new THREE.SphereGeometry(0.6, 32, 32);
-    const orbMat = new THREE.MeshStandardMaterial({
-      emissive: 0xffd700,
-      emissiveIntensity: 1.5,
-      color: 0xfff000,
-      metalness: 0.9,
-      roughness: 0.25,
-    });
-    const orb = new THREE.Mesh(orbGeo, orbMat);
-    scene.add(orb);
-
-    // Wires (moved outward so they don't cross the orb)
-    const wireMat = new THREE.MeshStandardMaterial({
-      color: 0xffc400,
-      metalness: 1,
-      emissive: 0xffd700,
-      emissiveIntensity: 0.3
-    });
-
-    const wireGeo = new THREE.CylinderGeometry(0.03, 0.03, 3, 16);
-    function createWire(x, y, z, rx, ry, rz, scale) {
-      const wire = new THREE.Mesh(wireGeo, wireMat);
-      wire.scale.y = scale;
-      wire.position.set(x, y, z);
-      wire.rotation.set(rx, ry, rz);
-      scene.add(wire);
-    }
-
-    // Move them closer to edges (no center overlap)
-    createWire(0, 0, 1.6, Math.PI / 2, 0, 0, 0.6);
-    createWire(0, 0, -1.6, Math.PI / 2, 0, 0, 0.6);
-    createWire(1.6, 0, 0, 0, 0, Math.PI / 2, 0.6);
-    createWire(-1.6, 0, 0, 0, 0, Math.PI / 2, 0.6);
-
-    camera.position.z = 6;
-
-    let t = 0;
-    let glowBoost = 0;
-    function animate() {
-      requestAnimationFrame(animate);
-      t += 0.02;
-      orb.position.y = Math.sin(t) * 0.5;
-      box.rotation.y += 0.003;
-      box.rotation.x += 0.002;
-
-      if (glowBoost > 0) glowBoost -= 0.02;
-      orb.material.emissiveIntensity = 1.5 + glowBoost;
-
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    // Loading logic
-    const loadingWrapper = document.querySelector('.loading-wrapper');
-    const loadingBar = document.querySelector('.loading-bar');
-    const loadingText = document.querySelector('.loading-text');
-
-    document.getElementById('three-container').addEventListener('click', () => {
-      loadingWrapper.style.display = 'block';
+    reactor.addEventListener('click', () => {
+      loadingScreen.style.display = 'flex';
       let progress = 0;
-      glowBoost = 0.5;
 
       const interval = setInterval(() => {
-        progress += 4;
+        progress++;
         loadingBar.style.width = progress + "%";
-        loadingText.textContent = progress + "%";
-
-        orb.material.emissiveIntensity = 1.5 + (progress / 50);
-        pointLight.intensity = 2 + (progress / 100);
+        percentage.textContent = progress + "%";
 
         if (progress >= 100) {
           clearInterval(interval);
-          glowBoost = 3;
-          document.body.classList.add('bright-theme');
+          document.body.classList.add('light-mode');
         }
-      }, 100);
+      }, 100); // slower loading (100ms per step = ~10 seconds)
     });
   </script>
 </body>
