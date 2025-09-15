@@ -1,86 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3D Heart</title>
-    <style>
-        body { margin: 0; background: #fff; overflow: hidden; }
-        canvas { display: block; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Reactor Core</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #0a0a0a;
+      transition: background-color 2s ease-in-out;
+    }
+
+    .container {
+      width: 300px;
+      height: 300px;
+      perspective: 800px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* 🔥 Reactor Core */
+    .reactor {
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 255, 0, 0.3));
+      border-radius: 50%;
+      box-shadow: 0 0 40px rgba(255, 255, 0, 0.9);
+      animation: float 3s ease-in-out infinite;
+      cursor: pointer;
+      transition: box-shadow 2s ease-in-out, background 2s ease-in-out;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    /* ⚡ Wires */
+    .wire {
+      position: absolute;
+      background: #444;
+      width: 4px;
+      height: 50px;
+      transition: background 2s ease-in-out;
+    }
+
+    .wire.top { top: -50px; left: 50%; transform: translateX(-50%); }
+    .wire.bottom { bottom: -50px; left: 50%; transform: translateX(-50%); }
+    .wire.left { left: -50px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+    .wire.right { right: -50px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+
+    /* 🔋 Loading Bar */
+    .loading-screen {
+      position: absolute;
+      bottom: -70px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 280px;
+      height: 40px;
+      border: 2px solid #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.1);
+      display: none;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .loading-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, yellow, gold);
+      transition: width 0.2s linear;
+    }
+
+    .percentage {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      font-family: monospace;
+      color: yellow;
+      font-size: 18px;
+      font-weight: bold;
+      text-shadow: 0 0 5px #000;
+    }
+
+    /* 🌞 Light Mode */
+    .light-mode {
+      background-color: #fff5c0 !important;
+    }
+
+    .light-mode .reactor {
+      box-shadow: 0 0 100px yellow;
+      background: radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 255, 0, 0.6));
+    }
+
+    .light-mode .wire {
+      background: yellow;
+    }
+  </style>
 </head>
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/FBXLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+  <div class="container">
+    <div class="wire top"></div>
+    <div class="wire bottom"></div>
+    <div class="wire left"></div>
+    <div class="wire right"></div>
+    <div class="reactor" id="reactor"></div>
+    <div class="loading-screen" id="loadingScreen">
+      <div class="loading-bar" id="loadingBar"></div>
+      <div class="percentage" id="percentage">0%</div>
+    </div>
+  </div>
 
-    <script>
-        // Set up the scene, camera, and renderer
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 1.5, 4);
+  <script>
+    const reactor = document.getElementById('reactor');
+    const loadingScreen = document.getElementById('loadingScreen');
+    const loadingBar = document.getElementById('loadingBar');
+    const percentage = document.getElementById('percentage');
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.outputEncoding = THREE.sRGBEncoding;
-        document.body.appendChild(renderer.domElement);
+    reactor.addEventListener('click', () => {
+      loadingScreen.style.display = 'flex';
+      let progress = 0;
 
-        // Add lighting
-        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x222222, 2);
-        scene.add(hemiLight);
-
-        const dirLight = new THREE.DirectionalLight(0xffffff, 2);
-        dirLight.position.set(5, 10, 7.5);
-        scene.add(dirLight);
-
-        // Add OrbitControls for user interaction
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-
-        // Load textures and create the material
-        const textureLoader = new THREE.TextureLoader();
-        const baseColorMap = textureLoader.load('./hart_UV_low01_BaseColor.hart_UV_low_defaultMat.png');
-        const normalMap = textureLoader.load('./hart_UV_low01_Normal.hart_UV_low_defaultMat.png');
-        const roughnessMap = textureLoader.load('./hart_UV_low01_Roughness.hart_UV_low_defaultMat.png');
-        const metalnessMap = textureLoader.load('./hart_UV_low01_Metalness.hart_UV_low_defaultMat.png');
-
-        const heartMaterial = new THREE.MeshStandardMaterial({
-            map: baseColorMap,
-            normalMap: normalMap,
-            roughnessMap: roughnessMap,
-            metalnessMap: metalnessMap,
-        });
-
-        // Load the FBX model with the confirmed name
-        const loader = new THREE.FBXLoader();
-        loader.load("./mhhhh.fbx", (obj) => {
-            obj.scale.set(0.02, 0.02, 0.02);
-            obj.position.set(0, -1, 0);
-            obj.traverse((child) => {
-                if (child.isMesh) {
-                    child.material = heartMaterial;
-                }
-            });
-            scene.add(obj);
-        }, undefined, (error) => {
-            console.error('An error happened while loading the FBX file:', error);
-        });
-
-        // Handle window resizing
-        window.addEventListener("resize", () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
+      const interval = setInterval(() => {
+        if (progress < 90) {
+          progress += 5; // 🚀 Fast increase to 90%
+        } else if (progress < 100) {
+          progress += 1; // 🐢 Slow increase from 90–100%
         }
-        animate();
-    </script>
+
+        if (progress > 100) progress = 100;
+
+        loadingBar.style.width = progress + "%";
+        percentage.textContent = progress + "%";
+
+        reactor.style.boxShadow = `0 0 ${40 + progress / 2}px rgba(255, 255, 0, 1)`;
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          document.body.classList.add('light-mode');
+        }
+      }, 100);
+    });
+  </script>
 </body>
 </html>
