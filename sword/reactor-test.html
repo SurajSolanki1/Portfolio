@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>3D Reactor with Theme Transition</title>
+  <title>3D Reactor with Loading Progress</title>
   <style>
     body {
       background: #000;
@@ -13,6 +13,8 @@
       justify-content: center;
       height: 100vh;
       transition: background 1.5s ease;
+      font-family: Arial, sans-serif;
+      color: #fff;
     }
     #three-container {
       width: 350px;
@@ -21,14 +23,15 @@
     }
     /* Loading Bar Container */
     .loading-wrapper {
-      width: 250px;
-      height: 8px;
-      border: 1px solid #555;
-      margin-top: 10px;
-      border-radius: 10px;
+      width: 300px;
+      height: 20px;
+      border: 2px solid #ffd400;
+      margin-top: 15px;
+      border-radius: 12px;
       overflow: hidden;
       background: #111;
       display: none; /* hidden initially */
+      position: relative;
     }
     .loading-bar {
       height: 100%;
@@ -36,9 +39,23 @@
       background: linear-gradient(90deg, #ffd400, #ffb100);
       transition: width 0.2s ease;
     }
+    .loading-text {
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+    }
     /* Bright theme after reactor fully charges */
     .bright-theme {
       background: #fff8e1;
+      color: #222;
     }
   </style>
 </head>
@@ -46,6 +63,7 @@
   <div id="three-container"></div>
   <div class="loading-wrapper">
     <div class="loading-bar"></div>
+    <div class="loading-text">0%</div>
   </div>
 
   <script type="module">
@@ -59,7 +77,7 @@
     document.getElementById('three-container').appendChild(renderer.domElement);
 
     // Lighting
-    const ambient = new THREE.AmbientLight(0xffffff, 0.2);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.15);
     scene.add(ambient);
     const pointLight = new THREE.PointLight(0xffd700, 2, 50);
     pointLight.position.set(0, 2, 4);
@@ -68,7 +86,7 @@
     // Transparent Glass Box
     const boxGeo = new THREE.BoxGeometry(3, 3, 3);
     const boxMat = new THREE.MeshPhysicalMaterial({
-      color: 0x222200,
+      color: 0x111100,
       transparent: true,
       opacity: 0.25,
       roughness: 0.05,
@@ -79,19 +97,19 @@
     const box = new THREE.Mesh(boxGeo, boxMat);
     scene.add(box);
 
-    // Floating Glowing Orb
+    // Yellow Floating Reactor Orb
     const orbGeo = new THREE.SphereGeometry(0.6, 32, 32);
     const orbMat = new THREE.MeshStandardMaterial({
-      emissive: 0xffd700,
-      emissiveIntensity: 1.5,
-      color: 0xfff000,
+      emissive: 0xffd400,
+      emissiveIntensity: 1.8,
+      color: 0xfff89a,
       metalness: 0.9,
       roughness: 0.25,
     });
     const orb = new THREE.Mesh(orbGeo, orbMat);
     scene.add(orb);
 
-    // Wires
+    // Wires (yellow)
     const wireMat = new THREE.MeshStandardMaterial({ color: 0xffc400, metalness: 1, emissive: 0xffd700, emissiveIntensity: 0.3 });
     const wireGeo = new THREE.CylinderGeometry(0.03, 0.03, 3, 16);
     function createWire(x, y, z, rx, ry, rz) {
@@ -119,7 +137,7 @@
       box.rotation.x += 0.002;
 
       if (glowBoost > 0) glowBoost -= 0.02;
-      orb.material.emissiveIntensity = 1.5 + glowBoost;
+      orb.material.emissiveIntensity = 1.8 + glowBoost;
 
       renderer.render(scene, camera);
     }
@@ -128,22 +146,25 @@
     // Loading logic
     const loadingWrapper = document.querySelector('.loading-wrapper');
     const loadingBar = document.querySelector('.loading-bar');
+    const loadingText = document.querySelector('.loading-text');
 
     document.getElementById('three-container').addEventListener('click', () => {
       loadingWrapper.style.display = 'block';
       let progress = 0;
-      glowBoost = 0.5; // small boost at start
+      glowBoost = 0.5;
 
       const interval = setInterval(() => {
         progress += 5;
         loadingBar.style.width = progress + "%";
-        orb.material.emissiveIntensity = 1.5 + (progress / 50); // orb glows stronger as it charges
-        pointLight.intensity = 2 + (progress / 100); // light gets brighter
+        loadingText.textContent = progress + "%";
+        orb.material.emissiveIntensity = 1.8 + (progress / 40); 
+        pointLight.intensity = 2 + (progress / 100);
 
         if (progress >= 100) {
           clearInterval(interval);
-          glowBoost = 3; // final flash
+          glowBoost = 3; 
           document.body.classList.add('bright-theme');
+          loadingText.textContent = "CHARGED!";
         }
       }, 100);
     });
