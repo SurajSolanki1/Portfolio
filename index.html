@@ -15,38 +15,56 @@
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{
-      font-family:'Poppins',sans-serif;background:linear-gradient(180deg,var(--light),#fff);color:var(--dark);
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(180deg,var(--light),#fff);
+      color:var(--dark);
       overflow-x:hidden;
     }
     header{
       background:linear-gradient(90deg,var(--yellow-primary),var(--yellow-accent));
-      text-align:center;padding:2rem 1rem;position:relative;overflow:hidden;
+      text-align:center;
+      padding:2rem 1rem;
+      position:relative;
+      overflow:hidden;
     }
     header::after{
-      content:"";position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:rgba(255,255,255,0.25);border-radius:50%;filter:blur(30px);
-    }
-    .brand{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap}
-    .logo-mark{
-      background:var(--dark);
-      padding:1rem;
+      content:"";
+      position:absolute;
+      top:-50px;right:-50px;
+      width:200px;height:200px;
+      background:rgba(255,255,255,0.25);
       border-radius:50%;
-      box-shadow:0 0 20px rgba(255,212,0,0.8), 0 0 40px rgba(255,212,0,0.5);
-      display:flex;align-items:center;justify-content:center;
-      animation: pulse 2s infinite;
+      filter:blur(30px);
     }
-    .logo-mark svg{
-      width:30px;height:30px;fill:var(--yellow-primary);
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:.5rem;
     }
-    @keyframes pulse {
-      0%, 100% {transform: scale(1); box-shadow:0 0 15px rgba(255,212,0,0.6), 0 0 35px rgba(255,212,0,0.4);}
-      50% {transform: scale(1.1); box-shadow:0 0 35px rgba(255,212,0,1), 0 0 60px rgba(255,212,0,0.7);}
+    h1{
+      font-size:2.5rem;
+      background:linear-gradient(90deg,#000,#4a4a4a);
+      -webkit-background-clip:text;
+      color:transparent;
     }
-    h1{font-size:2.5rem;background:linear-gradient(90deg,#000,#4a4a4a);-webkit-background-clip:text;color:transparent}
     .tagline{font-weight:600;margin-top:4px;color:#333}
 
     main{max-width:1100px;margin:2rem auto;padding:0 1rem}
-    section.card{background:#fff;border-radius:16px;padding:1.4rem;margin-bottom:1.6rem;box-shadow:0 6px 20px rgba(0,0,0,0.08)}
-    h2{color:var(--yellow-accent);margin-bottom:0.8rem;font-size:1.6rem;text-shadow:0 0 8px rgba(255,212,0,0.5)}
+    section.card{
+      background:#fff;
+      border-radius:16px;
+      padding:1.4rem;
+      margin-bottom:1.6rem;
+      box-shadow:0 6px 20px rgba(0,0,0,0.08)
+    }
+    h2{
+      color:var(--yellow-accent);
+      margin-bottom:0.8rem;
+      font-size:1.6rem;
+      text-shadow:0 0 8px rgba(255,212,0,0.5)
+    }
 
     .skills{display:flex;flex-wrap:wrap;gap:.6rem}
     .chip{
@@ -62,14 +80,35 @@
       transform:scale(1.1);
     }
 
-    .models-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
-    .model-card{border-radius:16px;overflow:hidden;background:#fff;transition:transform .3s ease,box-shadow .3s ease;cursor:pointer}
-    .model-card:hover{transform:scale(1.03);box-shadow:0 0 25px rgba(255,212,0,0.6)}
-    .model-thumb{height:240px;background:#FFF5CC;display:flex;align-items:center;justify-content:center;font-weight:700;color:#aaa;font-size:1.1rem}
+    .models-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:1rem
+    }
+    .model-card{
+      border-radius:16px;
+      overflow:hidden;
+      background:#fff;
+      transition:transform .3s ease,box-shadow .3s ease;
+      cursor:pointer
+    }
+    .model-card:hover{
+      transform:scale(1.03);
+      box-shadow:0 0 25px rgba(255,212,0,0.6)
+    }
+    .model-thumb{
+      height:240px;
+      background:#FFF5CC;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      color:#aaa;
+      font-size:1.1rem
+    }
     .model-body{padding:0.9rem}
 
     footer{text-align:center;margin-top:2rem;color:#666;font-size:0.9rem}
-
   </style>
 </head>
 <body>
@@ -78,13 +117,8 @@
 
   <header>
     <div class="brand">
-      <div class="logo-mark">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
-      </div>
-      <div>
-        <h1>Suraj <span style="color:var(--highlight)">Solanki</span></h1>
-        <div class="tagline">Infinite Ideas ♾️ | Software Engineer • UI/UX • SEO</div>
-      </div>
+      <h1>Suraj <span style="color:var(--highlight)">Solanki</span></h1>
+      <div class="tagline">Infinite Ideas ♾️ | Software Engineer • UI/UX • SEO</div>
     </div>
   </header>
 
@@ -101,7 +135,7 @@
             <p>A web-based 3D solar system built with Three.js, showcasing custom textures and visual effects.</p>
           </div>
         </div>
-        </div>
+      </div>
     </section>
   </main>
 
