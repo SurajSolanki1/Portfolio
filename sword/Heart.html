@@ -16,7 +16,7 @@
   </style>
 </head>
 <body>
-  <!-- Three.js CDN -->
+  <!-- Three.js -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/FBXLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
@@ -55,17 +55,17 @@
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
 
-    // Load Textures
+    // Textures
     const textureLoader = new THREE.TextureLoader();
-    const baseColor = textureLoader.load("hart_UV_low01_BaseColor.hart_UV_low_defaultMat.png");
-    const normalMap = textureLoader.load("hart_UV_low01_Normal.hart_UV_low_defaultMat.png");
-    const roughnessMap = textureLoader.load("hart_UV_low01_Roughness.hart_UV_low_defaultMat.png");
-    const metalnessMap = textureLoader.load("hart_UV_low01_Metalness.hart_UV_low_defaultMat.png");
+    const baseColor = textureLoader.load("./hart_UV_low01_BaseColor.hart_UV_low_defaultMat.png");
+    const normalMap = textureLoader.load("./hart_UV_low01_Normal.hart_UV_low_defaultMat.png");
+    const roughnessMap = textureLoader.load("./hart_UV_low01_Roughness.hart_UV_low_defaultMat.png");
+    const metalnessMap = textureLoader.load("./hart_UV_low01_Metalness.hart_UV_low_defaultMat.png");
 
     // Load Heart Model
     const loader = new THREE.FBXLoader();
-    loader.load("Heart.fbx", function (object) {
-      object.scale.set(0.01, 0.01, 0.01); // adjust size if too big
+    loader.load("./Heart.fbx", function (object) {
+      object.scale.set(0.01, 0.01, 0.01); // Adjust if too large
       object.traverse(function (child) {
         if (child.isMesh) {
           child.material = new THREE.MeshStandardMaterial({
@@ -81,14 +81,14 @@
       scene.add(object);
     });
 
-    // Resize Handler
+    // Resize
     window.addEventListener("resize", () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Animation Loop
+    // Animate
     function animate() {
       requestAnimationFrame(animate);
       controls.update();
