@@ -123,10 +123,11 @@
 
                 reactor.style.boxShadow = `0 0 ${40 + progress / 2}px rgba(255, 255, 0, 1)`;
 
-                // Darken background every 10%
-                const darkness = Math.floor(progress / 10);
-                const darkValue = 10 - darkness;
-                body.style.backgroundColor = `#0${darkValue}0${darkValue}0${darkValue}`;
+                // Brighter background every 10%
+                const brightness = Math.floor(progress / 10);
+                const brightValue = 10 + (brightness * 2); // Increased multiplier for more noticeable change
+                const hexValue = brightValue.toString(16).padStart(2, '0');
+                body.style.backgroundColor = `#0a0a0a`;
                 
                 if (progress >= 100) {
                     clearInterval(interval);
