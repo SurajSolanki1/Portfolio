@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Reactor Box</title>
+  <title>3D Reactor Core</title>
   <style>
     body {
       margin: 0;
@@ -12,7 +12,7 @@
       align-items: center;
       justify-content: center;
       background-color: #0a0a0a;
-      transition: background-color 3s ease-in-out;
+      transition: background-color 2s ease-in-out;
     }
 
     .container {
@@ -22,26 +22,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .box {
-      width: 200px;
-      height: 200px;
-      background: transparent; /* FIXED - no fill */
-      border: 3px solid rgba(255, 255, 0, 0.4);
-      border-radius: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       position: relative;
-      transform-style: preserve-3d;
-      box-shadow: 0 0 20px rgba(255, 255, 0, 0.2);
-      transition: box-shadow 2s ease-in-out, border-color 2s ease-in-out;
     }
 
+    /* 🔥 Reactor Core */
     .reactor {
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
       background: radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 255, 0, 0.3));
       border-radius: 50%;
       box-shadow: 0 0 40px rgba(255, 255, 0, 0.9);
@@ -56,6 +43,7 @@
       100% { transform: translateY(0); }
     }
 
+    /* ⚡ Wires */
     .wire {
       position: absolute;
       background: #444;
@@ -69,6 +57,7 @@
     .wire.left { left: -50px; top: 50%; transform: translateY(-50%) rotate(90deg); }
     .wire.right { right: -50px; top: 50%; transform: translateY(-50%) rotate(90deg); }
 
+    /* 🔋 Loading Bar */
     .loading-screen {
       position: absolute;
       bottom: -70px;
@@ -89,7 +78,7 @@
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, yellow, gold);
-      transition: width 10s linear;
+      transition: width 0.2s linear;
     }
 
     .percentage {
@@ -103,17 +92,13 @@
       text-shadow: 0 0 5px #000;
     }
 
+    /* 🌞 Light Mode */
     .light-mode {
       background-color: #fff5c0 !important;
     }
 
-    .light-mode .box {
-      box-shadow: 0 0 50px yellow;
-      border-color: yellow;
-    }
-
     .light-mode .reactor {
-      box-shadow: 0 0 80px yellow;
+      box-shadow: 0 0 100px yellow;
       background: radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 255, 0, 0.6));
     }
 
@@ -124,16 +109,14 @@
 </head>
 <body>
   <div class="container">
-    <div class="box">
-      <div class="wire top"></div>
-      <div class="wire bottom"></div>
-      <div class="wire left"></div>
-      <div class="wire right"></div>
-      <div class="reactor" id="reactor"></div>
-      <div class="loading-screen" id="loadingScreen">
-        <div class="loading-bar" id="loadingBar"></div>
-        <div class="percentage" id="percentage">0%</div>
-      </div>
+    <div class="wire top"></div>
+    <div class="wire bottom"></div>
+    <div class="wire left"></div>
+    <div class="wire right"></div>
+    <div class="reactor" id="reactor"></div>
+    <div class="loading-screen" id="loadingScreen">
+      <div class="loading-bar" id="loadingBar"></div>
+      <div class="percentage" id="percentage">0%</div>
     </div>
   </div>
 
@@ -148,11 +131,17 @@
       let progress = 0;
 
       const interval = setInterval(() => {
-        progress++;
+        if (progress < 90) {
+          progress += 5; // 🚀 Fast increase to 90%
+        } else if (progress < 100) {
+          progress += 1; // 🐢 Slow increase from 90–100%
+        }
+
+        if (progress > 100) progress = 100;
+
         loadingBar.style.width = progress + "%";
         percentage.textContent = progress + "%";
 
-        // Increase reactor glow as it charges
         reactor.style.boxShadow = `0 0 ${40 + progress / 2}px rgba(255, 255, 0, 1)`;
 
         if (progress >= 100) {
