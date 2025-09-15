@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Reactor Test</title>
+  <style>
+    body {
+      background: #000; /* Dark theme */
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    #three-container {
+      width: 350px;
+      height: 350px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="three-container"></div>
+
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js';
+
+    // Scene + Camera
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(350, 350);
+    document.getElementById('three-container').appendChild(renderer.domElement);
+
+    // Lighting
+    const ambient = new THREE.AmbientLight(0xffffff, 0.2);
+    scene.add(ambient);
+    const pointLight = new THREE.PointLight(0x00ffff, 2, 50);
+    pointLight.position.set(0, 2, 4);
+    scene.add(pointLight);
+
+    // Transparent Glass Box
+    const boxGeo = new THREE.BoxGeometry(3, 3, 3);
+    const boxMat = new THREE.MeshPhysicalMaterial({
+      color: 0x111111,
+      transparent: true,
+      opacity: 0.25,
+      roughness: 0.05,
+      metalness: 1,
+      transmission: 0.9,
+      clearcoat: 1,
+    });
+    const box = new THREE.Mesh(boxGeo, boxMat);
+    scene.add(box);
+
+    // Floating Glowing Orb
+    const orbGeo = new THREE.SphereGeometry(0.6, 32, 32);
+    const orbMat = new THREE.MeshStandardMaterial({
+      emissive: 0x00ffff,
+      emissiveIntensity: 1.5,
+      color: 0x00ffff,
+      metalness: 0.9,
+      roughness: 0.2,
+    });
+    const orb = new THREE.Mesh(orbGeo, orbMat);
+    scene.add(orb);
+
+    // Wires (4 edges)
+    const wireMat = new THREE.MeshStandardMaterial({ color: 0x00ffff, metalness: 1 });
+    const wireGeo = new THREE.CylinderGeometry(0.03, 0.03, 3, 16);
+    function createWire(x, y, z, rx, ry, rz) {
+      const wire = new THREE.Mesh(wireGeo, wireMat);
+      wire.position.set(x, y, z);
+      wire.rotation.set(rx, ry, rz);
+      scene.add(wire);
+    }
+    createWire(0, 0, 1.5, Math.PI / 2, 0, 0);
+    createWire(0, 0, -1.5, Math.PI / 2, 0, 0);
+    createWire(1.5, 0, 0, 0, 0, Math.PI / 2);
+    createWire(-1.5, 0, 0, 0, 0, Math.PI / 2);
+
+    camera.position.z = 6;
+
+    let t = 0;
+    let glowBoost = 0; // Glow spike on click
+    function animate() {
+      requestAnimationFrame(animate);
+
+      t += 0.02;
+      orb.position.y = Math.sin(t) * 0.5;
+
+      box.rotation.y += 0.003;
+      box.rotation.x += 0.002;
+
+      if (glowBoost > 0) glowBoost -= 0.02;
+      orb.material.emissiveIntensity = 1.5 + glowBoost;
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // CLICK EVENT - boost glow
+    document.getElementById('three-container').addEventListener('click', () => {
+      glowBoost = 2.5;
+      pointLight.intensity = 3;
+      orb.material.color.set(0x00ffff);
+      setTimeout(() => (pointLight.intensity = 2), 500);
+    });
+  </script>
+</body>
+</html>
