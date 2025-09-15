@@ -2,25 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>3D Reactor Test</title>
+  <title>3D Reactor with Theme Transition</title>
   <style>
     body {
-      background: #000; /* Dark theme */
+      background: #000;
       margin: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
+      transition: background 1.5s ease;
     }
     #three-container {
       width: 350px;
       height: 350px;
       cursor: pointer;
     }
+    /* Loading Bar Container */
+    .loading-wrapper {
+      width: 250px;
+      height: 8px;
+      border: 1px solid #555;
+      margin-top: 10px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #111;
+      display: none; /* hidden initially */
+    }
+    .loading-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ffd400, #ffb100);
+      transition: width 0.2s ease;
+    }
+    /* Bright theme after reactor fully charges */
+    .bright-theme {
+      background: #fff8e1;
+    }
   </style>
 </head>
 <body>
   <div id="three-container"></div>
+  <div class="loading-wrapper">
+    <div class="loading-bar"></div>
+  </div>
 
   <script type="module">
     import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js';
@@ -35,19 +61,19 @@
     // Lighting
     const ambient = new THREE.AmbientLight(0xffffff, 0.2);
     scene.add(ambient);
-    const pointLight = new THREE.PointLight(0x00ffff, 2, 50);
+    const pointLight = new THREE.PointLight(0xffd700, 2, 50);
     pointLight.position.set(0, 2, 4);
     scene.add(pointLight);
 
     // Transparent Glass Box
     const boxGeo = new THREE.BoxGeometry(3, 3, 3);
     const boxMat = new THREE.MeshPhysicalMaterial({
-      color: 0x111111,
+      color: 0x222200,
       transparent: true,
       opacity: 0.25,
       roughness: 0.05,
       metalness: 1,
-      transmission: 0.9,
+      transmission: 0.8,
       clearcoat: 1,
     });
     const box = new THREE.Mesh(boxGeo, boxMat);
@@ -56,17 +82,17 @@
     // Floating Glowing Orb
     const orbGeo = new THREE.SphereGeometry(0.6, 32, 32);
     const orbMat = new THREE.MeshStandardMaterial({
-      emissive: 0x00ffff,
+      emissive: 0xffd700,
       emissiveIntensity: 1.5,
-      color: 0x00ffff,
+      color: 0xfff000,
       metalness: 0.9,
-      roughness: 0.2,
+      roughness: 0.25,
     });
     const orb = new THREE.Mesh(orbGeo, orbMat);
     scene.add(orb);
 
-    // Wires (4 edges)
-    const wireMat = new THREE.MeshStandardMaterial({ color: 0x00ffff, metalness: 1 });
+    // Wires
+    const wireMat = new THREE.MeshStandardMaterial({ color: 0xffc400, metalness: 1, emissive: 0xffd700, emissiveIntensity: 0.3 });
     const wireGeo = new THREE.CylinderGeometry(0.03, 0.03, 3, 16);
     function createWire(x, y, z, rx, ry, rz) {
       const wire = new THREE.Mesh(wireGeo, wireMat);
@@ -82,7 +108,7 @@
     camera.position.z = 6;
 
     let t = 0;
-    let glowBoost = 0; // Glow spike on click
+    let glowBoost = 0;
     function animate() {
       requestAnimationFrame(animate);
 
@@ -99,12 +125,27 @@
     }
     animate();
 
-    // CLICK EVENT - boost glow
+    // Loading logic
+    const loadingWrapper = document.querySelector('.loading-wrapper');
+    const loadingBar = document.querySelector('.loading-bar');
+
     document.getElementById('three-container').addEventListener('click', () => {
-      glowBoost = 2.5;
-      pointLight.intensity = 3;
-      orb.material.color.set(0x00ffff);
-      setTimeout(() => (pointLight.intensity = 2), 500);
+      loadingWrapper.style.display = 'block';
+      let progress = 0;
+      glowBoost = 0.5; // small boost at start
+
+      const interval = setInterval(() => {
+        progress += 5;
+        loadingBar.style.width = progress + "%";
+        orb.material.emissiveIntensity = 1.5 + (progress / 50); // orb glows stronger as it charges
+        pointLight.intensity = 2 + (progress / 100); // light gets brighter
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          glowBoost = 3; // final flash
+          document.body.classList.add('bright-theme');
+        }
+      }, 100);
     });
   </script>
 </body>
