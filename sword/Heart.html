@@ -52,9 +52,9 @@
             metalnessMap: metalnessMap,
         });
 
-        // Load the FBX model
+        // Load the FBX model with the new name
         const loader = new THREE.FBXLoader();
-        loader.load("./heart.fbx", (obj) => {
+        loader.load("./MH.fbx", (obj) => {
             obj.scale.set(0.02, 0.02, 0.02);
             obj.position.set(0, -1, 0);
             obj.traverse((child) => {
