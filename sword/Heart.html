@@ -50,9 +50,9 @@
     // FBX loader
     const loader = new THREE.FBXLoader();
     loader.load(
-      "./Heart.fbx",
+      "./heart.fbx", // lowercase name now
       (obj) => {
-        obj.scale.set(0.01, 0.01, 0.01); // scale down
+        obj.scale.set(0.01, 0.01, 0.01); // adjust size
         obj.traverse((child) => {
           if (child.isMesh) {
             child.material = new THREE.MeshStandardMaterial({
@@ -68,7 +68,7 @@
         scene.add(obj);
       },
       undefined,
-      (err) => console.error("FBX load error:", err)
+      (err) => console.error("❌ FBX load error:", err)
     );
 
     // Resize handler
