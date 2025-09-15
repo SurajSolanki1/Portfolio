@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Reactor Core</title>
+  <title>Heart Reactor</title>
   <style>
     body {
       margin: 0;
@@ -25,22 +25,43 @@
       position: relative;
     }
 
-    /* 🔥 Reactor Core */
+    /* ❤️ Heart Reactor */
     .reactor {
+      position: relative;
       width: 100px;
-      height: 100px;
-      background: radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 255, 0, 0.3));
-      border-radius: 50%;
-      box-shadow: 0 0 40px rgba(255, 255, 0, 0.9);
-      animation: float 3s ease-in-out infinite;
+      height: 90px;
       cursor: pointer;
-      transition: box-shadow 2s ease-in-out, background 2s ease-in-out;
+      animation: float 3s ease-in-out infinite;
+      transition: filter 1s ease-in-out;
+      filter: drop-shadow(0 0 20px yellow);
+    }
+
+    .reactor::before,
+    .reactor::after {
+      content: "";
+      position: absolute;
+      width: 100px;
+      height: 90px;
+      background: red;
+      border-radius: 50%;
+      top: 0;
+      left: 0;
+    }
+
+    .reactor::after {
+      left: 50px;
+    }
+
+    .reactor {
+      background: red;
+      transform: rotate(-45deg);
+      border-radius: 50% 50% 0 0;
     }
 
     @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-      100% { transform: translateY(0); }
+      0% { transform: rotate(-45deg) translateY(0); }
+      50% { transform: rotate(-45deg) translateY(-10px); }
+      100% { transform: rotate(-45deg) translateY(0); }
     }
 
     /* ⚡ Wires */
@@ -77,7 +98,7 @@
     .loading-bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, yellow, gold);
+      background: linear-gradient(90deg, red, pink);
       transition: width 0.2s linear;
     }
 
@@ -86,7 +107,7 @@
       width: 100%;
       text-align: center;
       font-family: monospace;
-      color: yellow;
+      color: red;
       font-size: 18px;
       font-weight: bold;
       text-shadow: 0 0 5px #000;
@@ -94,16 +115,16 @@
 
     /* 🌞 Light Mode */
     .light-mode {
-      background-color: #fff5c0 !important;
+      background-color: #ffe0e0 !important;
     }
 
     .light-mode .reactor {
-      box-shadow: 0 0 100px yellow;
-      background: radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 255, 0, 0.6));
+      filter: drop-shadow(0 0 80px red);
+      background: red;
     }
 
     .light-mode .wire {
-      background: yellow;
+      background: red;
     }
   </style>
 </head>
@@ -132,9 +153,9 @@
 
       const interval = setInterval(() => {
         if (progress < 90) {
-          progress += 5; // 🚀 Fast increase to 90%
+          progress += 5; // 🚀 Fast up to 90%
         } else if (progress < 100) {
-          progress += 1; // 🐢 Slow increase from 90–100%
+          progress += 1; // 🐢 Slow from 90–100%
         }
 
         if (progress > 100) progress = 100;
@@ -142,7 +163,8 @@
         loadingBar.style.width = progress + "%";
         percentage.textContent = progress + "%";
 
-        reactor.style.boxShadow = `0 0 ${40 + progress / 2}px rgba(255, 255, 0, 1)`;
+        // ❤️ Glow increases as it charges
+        reactor.style.filter = `drop-shadow(0 0 ${20 + progress / 2}px red)`;
 
         if (progress >= 100) {
           clearInterval(interval);
