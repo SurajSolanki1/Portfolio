@@ -79,6 +79,10 @@
         }
       });
       scene.add(object);
+    },
+    undefined,
+    function (error) {
+      console.error("Error loading FBX:", error);
     });
 
     // Resize
