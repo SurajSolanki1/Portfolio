@@ -129,6 +129,13 @@
         }
 
         /* Right-side Spinning Circuit Ring animation */
+        .right-anim {
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .right-anim::before {
             content: '';
             width: 50px;
@@ -708,7 +715,6 @@
                 return;
             }
             reactor.classList.add('clicked');
-            
             clearInterval(loadingInterval);
             clearInterval(postChargeInterval);
             if (particleSpawnTimer) clearTimeout(particleSpawnTimer);
@@ -876,6 +882,7 @@
                 rightContainer.appendChild(particle);
             }
         }
+
 
         function setupIntersectionObserver() {
             const observerOptions = {
