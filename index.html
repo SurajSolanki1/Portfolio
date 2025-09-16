@@ -1,133 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reactor Charging Sequence</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      background: radial-gradient(circle at center, #111 40%, #000 100%);
-      font-family: Arial, sans-serif;
-      color: #fff;
-      overflow: hidden;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suraj Solanki - Infinite Ideas ♾️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --yellow-primary:#FFD400;
+      --yellow-accent:#FFB100;
+      --dark:#1A1A1A;
+      --light:#FFFDEB;
+      --highlight:#FF6B00;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(180deg,var(--light),#fff);
+      color:var(--dark);
+      overflow-x:hidden;
+    }
+    header{
+      background:linear-gradient(90deg,var(--yellow-primary),var(--yellow-accent));
+      text-align:center;
+      padding:2rem 1rem;
+      position:relative;
+      overflow:hidden;
+    }
+    header::after{
+      content:"";
+      position:absolute;
+      top:-50px;right:-50px;
+      width:200px;height:200px;
+      background:rgba(255,255,255,0.25);
+      border-radius:50%;
+      filter:blur(30px);
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:.5rem;
+    }
+    h1{
+      font-size:2.5rem;
+      background:linear-gradient(90deg,#000,#4a4a4a);
+      -webkit-background-clip:text;
+      color:transparent;
+    }
+    .tagline{font-weight:600;margin-top:4px;color:#333}
 
-    .reactor-core {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 212, 0, 0.8), rgba(255, 200, 0, 0.1));
-      box-shadow: 0 0 20px rgba(255, 200, 0, 0.6);
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: box-shadow 0.3s ease, background 0.3s ease;
-    }
+    main{max-width:1100px;margin:2rem auto;padding:0 1rem}
+    section.card{
+      background:#fff;
+      border-radius:16px;
+      padding:1.4rem;
+      margin-bottom:1.6rem;
+      box-shadow:0 6px 20px rgba(0,0,0,0.08)
+    }
+    h2{
+      color:var(--yellow-accent);
+      margin-bottom:0.8rem;
+      font-size:1.6rem;
+      text-shadow:0 0 8px rgba(255,212,0,0.5)
+    }
 
-    .progress-text {
-      margin-top: 20px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      letter-spacing: 1px;
-      color: #FFD400;
-      text-shadow: 0 0 10px rgba(255, 200, 0, 0.7);
-    }
+    .skills{display:flex;flex-wrap:wrap;gap:.6rem}
+    .chip{
+      background:linear-gradient(90deg,var(--yellow-primary),var(--yellow-accent));
+      padding:.45rem .9rem;
+      border-radius:999px;
+      color:#111;font-weight:700;
+      box-shadow:0 0 10px rgba(255,212,0,0.5);
+      transition:0.3s;
+    }
+    .chip:hover{
+      box-shadow:0 0 20px rgba(255,212,0,0.8), 0 0 40px rgba(255,212,0,0.6);
+      transform:scale(1.1);
+    }
 
-    .lightning {
-      position: absolute;
-      width: 2px;
-      height: 100px;
-      background: linear-gradient(to bottom, #fff, transparent);
-      filter: blur(1px);
-      opacity: 0;
-      transform: rotate(0deg);
-      transform-origin: top center;
-      animation: flicker 0.2s infinite;
-    }
+    .models-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:1rem
+    }
+    .model-card{
+      border-radius:16px;
+      overflow:hidden;
+      background:#fff;
+      transition:transform .3s ease,box-shadow .3s ease;
+      cursor:pointer
+    }
+    .model-card:hover{
+      transform:scale(1.03);
+      box-shadow:0 0 25px rgba(255,212,0,0.6)
+    }
+    .model-thumb{
+      height:240px;
+      background:#FFF5CC;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      color:#aaa;
+      font-size:1.1rem
+    }
+    .model-body{padding:0.9rem}
 
-    @keyframes flicker {
-      0%, 100% { opacity: 0.8; }
-      50% { opacity: 0.3; }
-    }
-  </style>
+    footer{text-align:center;margin-top:2rem;color:#666;font-size:0.9rem}
+  </style>
 </head>
 <body>
-  <div class="reactor-core" id="reactorCore"></div>
-  <div class="progress-text" id="progressText">0% Charged</div>
+  
+  <div id="container"></div>
 
-  <script>
-    const reactorCore = document.getElementById('reactorCore');
-    const progressText = document.getElementById('progressText');
+  <header>
+    <div class="brand">
+      <h1>Suraj <span style="color:var(--highlight)">Solanki</span></h1>
+      <div class="tagline">Infinite Ideas ♾️ | Software Engineer • UI/UX • SEO</div>
+    </div>
+  </header>
 
-    let progress = 0;
-    let orbBrightness = 20;
-    let lightningStarted = false;
-    let lightningElements = [];
+  <main>
+    <section class="card" id="projects">
+      <h2>Featured Projects</h2>
+      <div class="models-grid">
+        <div class="model-card" onclick="window.location.href='solar-system/solar-system.html';">
+          <div class="model-thumb">
+            <img src="solar-system/solar-system-thumb.jpg" alt="An interactive 3D solar system with spinning planets."/>
+          </div>
+          <div class="model-body">
+            <h3>Interactive 3D Solar System</h3>
+            <p>A web-based 3D solar system built with Three.js, showcasing custom textures and visual effects.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-    function createLightningRing(progress) {
-      // Clear old lightning elements
-      lightningElements.forEach(el => el.remove());
-      lightningElements = [];
+  <footer>
+    © 2025 Suraj Solanki — Built with Infinite Ideas ♾️
+  </footer>
 
-      const bolts = Math.min(6, Math.floor(progress / 20) + 1); // up to 6 bolts
-      for (let i = 0; i < bolts; i++) {
-        const lightning = document.createElement('div');
-        lightning.classList.add('lightning');
-        lightning.style.height = `${50 + Math.random() * 70}px`;
-        lightning.style.transform = `rotate(${Math.random() * 360}deg)`;
-        lightning.style.opacity = Math.random() * 0.7 + 0.3;
-        reactorCore.appendChild(lightning);
-        lightningElements.push(lightning);
-      }
-    }
-
-    function finalExplosionBurst() {
-      reactorCore.style.boxShadow = `
-        0 0 150px rgba(255, 80, 0, 1),
-        0 0 300px rgba(255, 40, 0, 0.9),
-        inset 0 0 80px rgba(255, 200, 0, 1)
-      `;
-      reactorCore.style.background = `radial-gradient(circle, #FF6B00, #FF3B00)`;
-      progressText.textContent = "FULLY CHARGED!";
-      progressText.style.color = "#FF6B00";
-      progressText.style.textShadow = "0 0 20px rgba(255, 80, 0, 0.9)";
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const loadingInterval = setInterval(() => {
-        if (progress < 100) {
-          progress += 0.5; // slow charge
-          orbBrightness += 0.4;
-
-          const orbColor = `rgb(255, ${200 - progress}, 0)`;
-          reactorCore.style.boxShadow = `
-            0 0 ${20 + orbBrightness}px rgba(255, ${150 - progress}, 0, 0.8),
-            0 0 ${40 + orbBrightness / 2}px rgba(255, ${100 + progress}, 0, 0.6),
-            inset 0 0 ${15 + progress / 3}px ${orbColor}
-          `;
-          reactorCore.style.background = `radial-gradient(circle, ${orbColor}, rgba(255, 150, 0, 0.3))`;
-
-          progressText.textContent = `${Math.floor(progress)}% Charged`;
-
-          if (progress > 30 && !lightningStarted) {
-            lightningStarted = true;
-          }
-
-          if (lightningStarted) createLightningRing(progress);
-        } else {
-          clearInterval(loadingInterval);
-          setTimeout(finalExplosionBurst, 300);
-        }
-      }, 100); // ~20 seconds total charge
-    });
-  </script>
 </body>
 </html>
-
