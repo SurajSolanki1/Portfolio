@@ -3,55 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suraj Solanki | 3D Interactive Reactor Core</title>
+    <title>Suraj Solanki | Portfolio</title>
     <style>
         body {
             margin: 0;
-            height: 100vh;
             display: flex;
-            flex-direction: column; /* Changed to column to stack content */
+            flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Changed to flex-start to place content at the top */
+            justify-content: flex-start;
             background-color: #000000;
-            transition: background-color 0.1s ease-in-out;
-            overflow-x: hidden;
+            transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
             color: #ffffff;
-            font-family: Arial, sans-serif;
-            padding-top: 50px; /* Add some space at the top */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 50px;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        .portfolio-content {
+        body.white-bg {
+            color: #333333;
+        }
+
+        body.white-bg a,
+        body.white-bg ul li strong,
+        body.white-bg .section-title {
+            color: #ffd700;
+        }
+
+        /* Floating background particles */
+        .floating-particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 10s infinite ease-in-out;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); opacity: 0.5; }
+            50% { transform: translate(var(--x-offset), var(--y-offset)); opacity: 0.8; }
+            100% { transform: translate(0, 0); opacity: 0.5; }
+        }
+
+        /* New side particles */
+        .side-particles {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 15%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .side-particles.left {
+            left: 0;
+        }
+        
+        .side-particles.right {
+            right: 0;
+        }
+
+        .side-particles .floating-particle {
+            animation: side-float var(--float-duration) infinite ease-in-out;
+        }
+
+        @keyframes side-float {
+            0% { transform: translateY(0); opacity: 0; }
+            5% { opacity: 0.2; }
+            95% { opacity: 0.2; }
+            100% { transform: translateY(var(--y-end)); opacity: 0; }
+        }
+
+        .portfolio-header {
             max-width: 800px;
             text-align: center;
-            margin-bottom: 50px; /* Space between text and animation */
+            margin-bottom: 50px;
             padding: 0 20px;
+            opacity: 0;
+            animation: fade-in 1s forwards;
+            animation-delay: 0.5s;
+            /* Added Flexbox for alignment */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
         }
 
-        .portfolio-content h1 {
-            font-size: 2.5em;
-            color: #ffd700;
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .profile-logo {
+            width: 250px;
+            height: auto;
+            margin: 0 20px;
+            transition: transform 0.2s ease-in-out;
         }
 
-        .portfolio-content h3 {
+        .profile-logo:hover {
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+
+        .portfolio-header h3 {
             font-size: 1.2em;
             color: #e0e0e0;
+            margin-top: 10px;
+            opacity: 0.8;
+            font-style: italic;
+            cursor: pointer;
+            transition: color 0.3s ease;
         }
-
-        .portfolio-content p {
-            line-height: 1.6;
-            margin: 20px 0;
-        }
-
-        .portfolio-content a {
+        
+        .portfolio-header h3:hover {
             color: #ffd700;
-            text-decoration: none;
-            font-weight: bold;
+        }
+        
+        /* New Animations (only right-side kept) */
+        .header-animation {
+            height: 150px;
+            position: relative;
         }
 
-        .portfolio-content a:hover {
-            text-decoration: underline;
+        /* Right-side Spinning Circuit Ring animation */
+        .right-anim {
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
+        .right-anim::before {
+            content: '';
+            width: 50px;
+            height: 50px;
+            border: 2px solid transparent;
+            border-top-color: #ffd700;
+            border-bottom-color: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+            animation: spin-ring 2s linear infinite;
+        }
+        
+        @keyframes spin-ring {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* --- General Layout and Components (Unchanged) --- */
+        .main-content-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .side-content {
+            flex: 1;
+            max-width: 350px;
+            margin-top: 0;
+        }
+
+        .side-content .section-content {
+            margin-bottom: 0;
+        }
+        
+        /* Container for the 3D reactor animation */
         .container {
             width: 400px;
             height: 400px;
@@ -71,6 +193,31 @@
             animation: subtle-breathe 2s ease-in-out infinite;
         }
 
+        /* Pulse effect on reactor */
+        .reactor:not(.clicked)::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            animation: pulse-border 2s infinite;
+            z-index: 9;
+        }
+
+        .reactor.clicked::before {
+            animation: none;
+            border-color: transparent;
+        }
+
+        @keyframes pulse-border {
+            0% { transform: scale(0.9); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+            100% { transform: scale(0.9); opacity: 0.8; }
+        }
+
         .reactor-core {
             width: 100%;
             height: 100%;
@@ -82,110 +229,17 @@
             transition: all 0.2s linear;
         }
 
-        /* Lightning ring around the orb */
-        .lightning-ring {
-            position: absolute;
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            z-index: 5;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .lightning-arc {
-            position: absolute;
-            background: rgba(255, 165, 0, 0.7);
-            border-radius: 2px;
-            transform-origin: center center;
-            z-index: 5;
-            opacity: 0;
-            box-shadow: 0 0 8px rgba(255, 165, 0, 0.8);
-            animation: arc-pulse 3s infinite;
-        }
-
-        @keyframes arc-pulse {
-            0%, 100% {
-                opacity: 0.3;
-                box-shadow: 0 0 8px rgba(255, 165, 0, 0.5);
-            }
-            50% {
-                opacity: 0.9;
-                box-shadow: 0 0 15px rgba(255, 200, 100, 1), 0 0 25px rgba(255, 200, 100, 0.7);
-            }
-        }
-
-        @keyframes arc-crackle {
-            0% {
-                opacity: 0;
-                transform: scale(0.95) rotate(0deg);
-            }
-            20% {
-                opacity: 0.9;
-                transform: scale(1.02) rotate(1deg);
-            }
-            40% {
-                opacity: 0.7;
-                transform: scale(0.98) rotate(-1deg);
-            }
-            60% {
-                opacity: 1;
-                transform: scale(1.03) rotate(2deg);
-            }
-            80% {
-                opacity: 0.8;
-                transform: scale(0.99) rotate(-2deg);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0.95) rotate(0deg);
-            }
-        }
-
         @keyframes subtle-breathe {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.01); }
         }
 
-        /* Explosion Burst effect */
-        .explosion-effect {
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            opacity: 0;
-            animation: none;
-            pointer-events: none;
-            z-index: 15;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
         @keyframes final-explosion-burst {
-            0% {
-                transform: translate(-50%, -50%) scale(0.5);
-                opacity: 0.8;
-                box-shadow: 0 0 50px 25px rgba(255, 255, 255, 0.8),
-                            0 0 80px 40px rgba(255, 200, 0, 0.8),
-                            0 0 120px 60px rgba(255, 100, 0, 0.6);
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(2.5);
-                opacity: 1;
-                box-shadow: 0 0 100px 50px rgba(255, 255, 255, 1),
-                            0 0 150px 75px rgba(255, 200, 0, 1),
-                            0 0 200px 100px rgba(255, 100, 0, 0.8);
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(5);
-                opacity: 0;
-                box-shadow: 0 0 0 0 transparent;
-            }
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; box-shadow: 0 0 50px 25px rgba(255, 255, 255, 0.8), 0 0 80px 40px rgba(255, 200, 0, 0.8), 0 0 120px 60px rgba(255, 100, 0, 0.6); }
+            50% { transform: translate(-50%, -50%) scale(2.5); opacity: 1; box-shadow: 0 0 100px 50px rgba(255, 255, 255, 1), 0 0 150px 75px rgba(255, 200, 0, 1), 0 0 200px 100px rgba(255, 100, 0, 0.8); }
+            100% { transform: translate(-50%, -50%) scale(5); opacity: 0; box-shadow: 0 0 0 0 transparent; }
         }
 
-        /* Smoke/Mist Particles */
         .smoke-particle {
             position: absolute;
             width: 8px;
@@ -203,7 +257,6 @@
             100% { transform: translateY(-200px) scale(2); opacity: 0; }
         }
 
-        /* Lightning effect */
         .lightning {
             position: absolute;
             background: rgba(255, 165, 0, 0.8);
@@ -224,7 +277,6 @@
             100% { opacity: 0; }
         }
 
-        /* Lightning segment styles */
         .lightning-segment {
             position: absolute;
             background: rgba(255, 165, 0, 0.9);
@@ -236,77 +288,232 @@
             animation: lightning-flicker 1.5s forwards;
         }
 
-        /* Fire particle styles */
-        .fire-particle {
-            position: absolute;
-            border-radius: 50%;
-            z-index: 7;
-            pointer-events: none;
-            animation: fire-float 3s ease-out forwards;
-            opacity: 0;
+        /* New sections for portfolio */
+        .portfolio-sections {
+            max-width: 800px;
+            width: 100%;
+            margin-top: 80px;
+            padding: 0 20px;
         }
 
-        @keyframes fire-float {
-            0% {
-                transform: translate(0, 0) scale(0.5);
-                opacity: 0.8;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--end-x), var(--end-y)) scale(1.5);
-                opacity: 0;
-            }
+        .section-title {
+            text-align: center;
+            font-size: 2em;
+            color: #ffd700;
+            margin-bottom: 30px;
+            position: relative;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title::after {
+            content: '';
+            width: 60px;
+            height: 3px;
+            background: #ffd700;
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Override for the bottom section titles to animate on scroll */
+        .portfolio-sections .section-title {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .section-content {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-content h4 {
+            font-size: 1.4em;
+            color: #fff;
+            margin-top: 0;
+            border-left: 3px solid #ffd700;
+            padding-left: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        ul li {
+            background: rgba(255, 255, 255, 0.05);
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        ul li:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        ul li strong {
+            color: #ffd700;
+        }
+
+        .contact-button {
+            display: inline-block;
+            background-color: #ffd700;
+            color: #000;
+            font-weight: bold;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            border: none;
+            cursor: pointer;
+        }
+
+        .contact-button:hover {
+            background-color: #fff;
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
-    <div class="portfolio-content">
-        <h1>Suraj Solanki</h1>
-        <h3>Software Engineer | UI/UX Designer | Digital Marketer</h3>
-        <p>
-            I am a Master of Computer Applications (MCA) student at Amity University Online, with a BCA from Savitribai Phule Pune University. This interactive portfolio is a demonstration of my skills in **software engineering**, **UI/UX design**, and **digital marketing**. I specialize in creating robust and engaging web experiences that are both technically sound and user-friendly.
-        </p>
-        <p>
-            Connect with me on LinkedIn: <a href="https://www.linkedin.com/in/suraj-solankii/" target="_blank">https://www.linkedin.com/in/suraj-solankii/</a>
-        </p>
+    <div class="side-particles left" id="left-particles"></div>
+    <div class="side-particles right" id="right-particles"></div>
+
+    <div class="portfolio-header">
+        <img src="1.png" alt="Suraj Solanki's logo" class="profile-logo" id="profileLogo" data-hover-src="2.png">
+        <div class="header-animation right-anim"></div>
+        <h3 id="quoteText">"Actual Talent Means Having Fortitude To Prove One's Ability"</h3>
+    </div>
+    
+    <div class="main-content-row">
+        <div class="side-content">
+            <h2 class="section-title">Skills & Expertise</h2>
+            <div class="section-content">
+                <ul>
+                    <li>✨ <strong>Software Engineering:</strong> Full-stack development, efficient code architecture, and problem-solving.</li>
+                    <li>💻 <strong>UI/UX Design:</strong> Creating intuitive interfaces, user-flow diagrams, and visually appealing designs.</li>
+                    <li>📈 <strong>Digital Marketing:</strong> Search Engine Optimization (SEO) and online content strategy to maximize reach.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="reactor" id="reactor">
+                <div class="reactor-core" id="reactorCore"></div>
+            </div>
+            <div class="explosion-effect" id="explosionEffect"></div>
+        </div>
+        
+        <div class="side-content">
+            <h2 class="section-title">Education</h2>
+            <div class="section-content">
+                <h4>Master of Computer Applications (MCA)</h4>
+                <p>Amity University Online</p>
+                <br>
+                <h4>Bachelor of Computer Applications (BCA)</h4>
+                <p>Savitribai Phule Pune University</p>
+            </div>
+        </div>
     </div>
 
-    <div class="container">
-        <div class="lightning-ring" id="lightningRing"></div>
-        <div class="reactor" id="reactor">
-            <div class="reactor-core" id="reactorCore"></div>
+    <div class="portfolio-sections">
+        <h2 class="section-title">Projects</h2>
+        <div class="section-content">
+            <ul>
+                <li>
+                    <h4>Project 1: React E-Commerce Platform</h4>
+                    <p>Developed a full-stack e-commerce site with a secure checkout system using React, Node.js, and MongoDB.</p>
+                </li>
+                <li>
+                    <h4>Project 2: AI-Powered Chatbot</h4>
+                    <p>Built a conversational chatbot for customer support, leveraging machine learning and natural language processing.</p>
+                </li>
+            </ul>
         </div>
-        <div class="explosion-effect" id="explosionEffect"></div>
+        
+        <h2 class="section-title">Certifications</h2>
+        <div class="section-content">
+            <ul>
+                <li>🏆 <strong>Certified Full-Stack Developer</strong> - [Certifying Body]</li>
+                <li>🏅 <strong>Google Analytics Certified</strong> - Google</li>
+                <li>📜 <strong>AWS Certified Cloud Practitioner</strong> - Amazon Web Services</li>
+            </ul>
+        </div>
+        
+        <h2 class="section-title">Contact</h2>
+        <div class="section-content">
+            <p>I am actively seeking new opportunities and collaborations. Feel free to connect with me on LinkedIn to discuss your projects or ideas.</p>
+            <a href="https://www.linkedin.com/in/suraj-solankii/" target="_blank" class="contact-button">LinkedIn Profile</a>
+            <a href="YOUR_RESUME_LINK_HERE" target="_blank" class="contact-button" style="margin-left: 15px;">Download Resume</a>
+        </div>
     </div>
 
     <script>
         const reactor = document.getElementById('reactor');
         const reactorCore = document.getElementById('reactorCore');
         const explosionEffect = document.getElementById('explosionEffect');
-        const lightningRing = document.getElementById('lightningRing');
         const container = document.querySelector('.container');
         const body = document.body;
+        const quoteText = document.getElementById('quoteText');
+        const profileLogo = document.getElementById('profileLogo');
+
+        const quotes = [
+            "\"Actual Talent Means Having Fortitude To Prove One's Ability\"",
+            "\"Every line of code is a step toward a new reality.\"",
+            "\"Innovation is the fusion of curiosity and courage.\"",
+            "\"The only way to predict the future is to create it.\"",
+            "\"Coding is the closest thing to magic in the modern world.\""
+        ];
+        let currentQuoteIndex = 0;
+
+        quoteText.addEventListener('click', () => {
+            currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+            quoteText.textContent = quotes[currentQuoteIndex];
+        });
+
+        profileLogo.addEventListener('mouseover', () => {
+            const hoverSrc = profileLogo.getAttribute('data-hover-src');
+            if (hoverSrc) {
+                profileLogo.src = hoverSrc;
+            }
+        });
+
+        profileLogo.addEventListener('mouseout', () => {
+            profileLogo.src = "1.png";
+        });
 
         let loadingInterval;
         let postChargeInterval;
         let particleSpawnTimer;
         let smokeSpawnTimer;
         let lightningSpawnTimer;
-        let fireSpawnTimer;
-        let arcSpawnInterval;
         let lightningStarted = false;
 
         function resetReactor() {
             clearInterval(loadingInterval);
             clearInterval(postChargeInterval);
-            clearInterval(arcSpawnInterval);
             if (particleSpawnTimer) clearTimeout(particleSpawnTimer);
             if (smokeSpawnTimer) clearTimeout(smokeSpawnTimer);
             if (lightningSpawnTimer) clearTimeout(lightningSpawnTimer);
-            if (fireSpawnTimer) clearTimeout(fireSpawnTimer);
             body.style.backgroundColor = '#000000';
+            body.classList.remove('white-bg');
             reactorCore.style.boxShadow = `
                 0 0 20px rgba(255, 255, 0, 0.8),
                 0 0 40px rgba(255, 165, 0, 0.4),
@@ -314,9 +521,9 @@
             `;
             reactorCore.style.background = 'radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 255, 0, 0.3))';
             reactor.style.animation = 'subtle-breathe 2s ease-in-out infinite';
-            lightningRing.style.opacity = '0';
             lightningStarted = false;
-            document.querySelectorAll('.particle, .smoke-particle, .lightning, .lightning-arc, .lightning-segment, .fire-particle').forEach(el => el.remove());
+            document.querySelectorAll('.particle, .smoke-particle, .lightning, .lightning-segment').forEach(el => el.remove());
+            reactor.classList.remove('clicked');
         }
 
         function createLightningSegment(startX, startY, endX, endY, width, progress, containerEl) {
@@ -360,7 +567,6 @@
         function createMultiSegmentLightning(startX, startY, endX, endY, width, progress, segments) {
             const containerEl = document.querySelector('.container');
             const points = [];
-
             points.push({x: startX, y: startY});
 
             const dx = endX - startX;
@@ -371,16 +577,13 @@
                 const t = i / segments;
                 const midX = startX + dx * t;
                 const midY = startY + dy * t;
-
                 const offset = distance * 0.05 * (Math.random() - 0.5);
                 const angle = Math.atan2(dy, dx) + Math.PI/2;
-
                 points.push({
                     x: midX + Math.cos(angle) * offset,
                     y: midY + Math.sin(angle) * offset
                 });
             }
-
             points.push({x: endX, y: endY});
 
             for (let i = 0; i < points.length - 1; i++) {
@@ -401,27 +604,30 @@
             createMultiSegmentLightning(startX, startY, endX, endY, width, progress, segments);
         }
 
-        function createLightningRing(progress) {
-            document.querySelectorAll('.lightning-arc, .lightning-segment').forEach(el => el.remove());
+        function createLightningFromReactor(progress) {
+            document.querySelectorAll('.lightning-segment').forEach(el => el.remove());
 
             const containerRect = container.getBoundingClientRect();
-            const containerCenterX = containerRect.width / 2;
-            const containerCenterY = containerRect.height / 2;
+            const containerLeft = containerRect.left;
+            const containerTop = containerRect.top;
 
-            for (let i = 0; i < 2; i++) {
-                const irregularity = 0.9 + Math.random() * 0.2;
-                const radius = 150 * irregularity;
-                const angle = (i / 2) * Math.PI * 2;
+            const reactorRect = reactor.getBoundingClientRect();
+            const reactorCenterX = reactorRect.left - containerLeft + (reactorRect.width / 2);
+            const reactorCenterY = reactorRect.top - containerTop + (reactorRect.height / 2);
+            const reactorRadius = reactorRect.width / 2;
 
-                const angleOffset = (Math.random() - 0.5) * 0.1;
-                const finalAngle = angle + angleOffset;
+            const numFlashes = 2 + Math.floor(progress / 20);
 
-                const startX = containerCenterX + Math.cos(finalAngle) * (radius * 0.8);
-                const startY = containerCenterY + Math.sin(finalAngle) * (radius * 0.8);
-                const endX = containerCenterX + Math.cos(finalAngle) * (radius * 1.2);
-                const endY = containerCenterY + Math.sin(finalAngle) * (radius * 1.2);
+            for (let i = 0; i < numFlashes; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const length = 50 + (progress * 1.5);
+                const width = 2 + (progress / 30);
+                
+                const startX = reactorCenterX + Math.cos(angle) * reactorRadius;
+                const startY = reactorCenterY + Math.sin(angle) * reactorRadius;
 
-                const width = 2 + (progress / 25);
+                const endX = startX + Math.cos(angle) * length;
+                const endY = startY + Math.sin(angle) * length;
 
                 createPlanetaryLightning(startX, startY, endX, endY, width, progress);
             }
@@ -459,78 +665,16 @@
             const smoke = document.createElement('div');
             smoke.className = 'smoke-particle';
             const container = document.querySelector('.container');
-            const x = Math.random() * 400;
-            const y = 200 + (Math.random() * 50);
-            smoke.style.left = `${x}px`;
-            smoke.style.top = `${y}px`;
+            
+            const reactorRect = reactor.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            const spawnX = (reactorRect.left - containerRect.left) + (reactorRect.width / 2) + (Math.random() * 50 - 25);
+            const spawnY = (reactorRect.top - containerRect.top) + reactorRect.height + (Math.random() * 20);
+
+            smoke.style.left = `${spawnX}px`;
+            smoke.style.top = `${spawnY}px`;
             container.appendChild(smoke);
             smoke.addEventListener('animationend', () => smoke.remove());
-        }
-
-        function createLightning(progress) {
-            const containerRect = container.getBoundingClientRect();
-            const containerCenterX = containerRect.width / 2;
-            const containerCenterY = containerRect.height / 2;
-
-            const angle = Math.random() * Math.PI * 2;
-            const length = 50 + (progress * 2);
-            const width = 2 + (progress / 25);
-
-            const startX = containerCenterX + Math.cos(angle) * 75;
-            const startY = containerCenterY + Math.sin(angle) * 75;
-            const endX = startX + Math.cos(angle) * length;
-            const endY = startY + Math.sin(angle) * length;
-
-            createPlanetaryLightning(startX, startY, endX, endY, width, progress);
-        }
-
-        function createFireParticle(progress) {
-            const fire = document.createElement('div');
-            fire.className = 'fire-particle';
-
-            const orbRect = reactor.getBoundingClientRect();
-            const orbCenterX = orbRect.left + orbRect.width / 2;
-            const orbCenterY = orbRect.top + orbRect.height / 2;
-
-            const angle = Math.random() * Math.PI * 2;
-            const distance = 100 + Math.random() * (window.innerWidth * 0.8);
-
-            const endX = Math.cos(angle) * distance;
-            const endY = Math.sin(angle) * distance;
-
-            fire.style.setProperty('--end-x', `${endX}px`);
-            fire.style.setProperty('--end-y', `${endY}px`);
-
-            const size = 5 + (progress / 10);
-            fire.style.width = `${size}px`;
-            fire.style.height = `${size}px`;
-
-            const fireIntensity = 0.5 + (progress / 200);
-            fire.style.background = `radial-gradient(circle,
-                rgba(255, 255, 0, ${fireIntensity}),
-                rgba(255, 165, 0, ${fireIntensity * 0.8}),
-                rgba(255, 0, 0, ${fireIntensity * 0.6}))`;
-
-            fire.style.boxShadow = `0 0 ${5 + progress/10}px rgba(255, 100, 0, ${fireIntensity})`;
-
-            fire.style.left = `${orbCenterX}px`;
-            fire.style.top = `${orbCenterY}px`;
-
-            document.body.appendChild(fire);
-
-            fire.addEventListener('animationend', () => {
-                if (fire.parentNode) {
-                    fire.parentNode.removeChild(fire);
-                }
-            });
-        }
-
-        function spawnFireParticles(progress) {
-            createFireParticle(progress);
-            if (progress < 100) {
-                const spawnRate = Math.max(50, 300 - (progress * 2));
-                fireSpawnTimer = setTimeout(() => spawnFireParticles(progress), spawnRate);
-            }
         }
 
         function finalExplosionBurst() {
@@ -549,12 +693,6 @@
                 }, i * 100);
             }
 
-            for (let i = 0; i < 30; i++) {
-                setTimeout(() => {
-                    createFireParticle(100);
-                }, i * 30);
-            }
-
             setTimeout(() => {
                 startPostChargeEffect();
             }, 1000);
@@ -564,24 +702,25 @@
             const angle = Math.random() * Math.PI * 2;
             const length = 200 + Math.random() * 100;
             const width = 5 + Math.random() * 3;
-
             const startX = centerX;
             const startY = centerY;
             const endX = startX + Math.cos(angle) * length;
             const endY = startY + Math.sin(angle) * length;
-
             createPlanetaryLightning(startX, startY, endX, endY, width, 100);
         }
 
         reactor.addEventListener('click', () => {
+            if (reactor.classList.contains('clicked')) {
+                resetReactor();
+                return;
+            }
+            reactor.classList.add('clicked');
             clearInterval(loadingInterval);
             clearInterval(postChargeInterval);
-            clearInterval(arcSpawnInterval);
             if (particleSpawnTimer) clearTimeout(particleSpawnTimer);
             if (smokeSpawnTimer) clearTimeout(smokeSpawnTimer);
             if (lightningSpawnTimer) clearTimeout(lightningSpawnTimer);
-            if (fireSpawnTimer) clearTimeout(fireSpawnTimer);
-            document.querySelectorAll('.particle, .smoke-particle, .lightning, .lightning-arc, .lightning-segment, .fire-particle').forEach(el => el.remove());
+            document.querySelectorAll('.particle, .smoke-particle, .lightning, .lightning-segment').forEach(el => el.remove());
 
             let progress = 0;
 
@@ -601,30 +740,12 @@
                 }
             }
 
-            function spawnLightning() {
-                createLightning(progress);
-                if (progress < 100) {
-                    const spawnRate = Math.max(100, 600 - (progress * 5));
-                    lightningSpawnTimer = setTimeout(spawnLightning, spawnRate);
-                }
-            }
-
-            function spawnFire() {
-                spawnFireParticles(progress);
-            }
-
             spawnParticles();
             spawnSmoke();
 
             setTimeout(() => {
-                spawnLightning();
                 lightningStarted = true;
-                lightningRing.style.opacity = '1';
             }, 800);
-
-            setTimeout(() => {
-                spawnFire();
-            }, 500);
 
             loadingInterval = setInterval(() => {
                 if (progress < 100) {
@@ -634,7 +755,7 @@
                 }
 
                 body.style.backgroundColor = getBackgroundColorFromProgress(progress);
-
+                
                 const orbBrightness = Math.floor(progress * 4);
                 const orbColor = getOrbColorFromProgress(progress);
 
@@ -651,8 +772,9 @@
 
                 reactor.style.animation = `breathe ${2 - (progress/100)}s ease-in-out infinite`;
 
+
                 if (lightningStarted && progress > 10) {
-                    createLightningRing(progress);
+                    createLightningFromReactor(progress);
                 }
 
                 if (progress >= 100) {
@@ -660,7 +782,6 @@
                     if (particleSpawnTimer) clearTimeout(particleSpawnTimer);
                     if (smokeSpawnTimer) clearTimeout(smokeSpawnTimer);
                     if (lightningSpawnTimer) clearTimeout(lightningSpawnTimer);
-                    if (fireSpawnTimer) clearTimeout(fireSpawnTimer);
                     reactor.style.animation = 'none';
                     finalExplosionBurst();
                 }
@@ -675,8 +796,6 @@
             `;
             reactorCore.style.background = `radial-gradient(circle, rgba(255, 165, 0, 1), rgba(255, 165, 0, 0.5))`;
             reactor.style.animation = 'subtle-breathe 2s ease-in-out infinite';
-
-            lightningRing.style.opacity = '0';
 
             let brightness = 255;
             const fadeTime = 30000;
@@ -698,20 +817,100 @@
                 `;
                 reactorCore.style.background = `radial-gradient(circle, rgba(${r}, ${g}, ${b}, 1), rgba(${r}, ${g}, ${b}, 0.5))`;
 
+                if (brightness > 100) {
+                    body.classList.add('white-bg');
+                } else {
+                    body.classList.remove('white-bg');
+                }
+
                 if (brightness <= 0) {
                     clearInterval(postChargeInterval);
                     body.style.backgroundColor = '#000000';
-                    reactorCore.style.boxShadow = `
-                        0 0 20px rgba(255, 255, 0, 0.8),
-                        0 0 40px rgba(255, 165, 0, 0.4),
-                        inset 0 0 15px rgba(255, 255, 0, 0.9)
-                    `;
-                    reactorCore.style.background = 'radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 255, 0, 0.3))';
+                    body.classList.remove('white-bg');
+                    resetReactor();
                 }
             }, 50);
         }
 
-        resetReactor();
+        function createFloatingParticles() {
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'floating-particle';
+                const size = Math.random() * 5 + 3;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                particle.style.setProperty('--x-offset', `${(Math.random() - 0.5) * 50}px`);
+                particle.style.setProperty('--y-offset', `${(Math.random() - 0.5) * 50}px`);
+                document.body.appendChild(particle);
+            }
+        }
+
+        function createSideParticles() {
+            const leftContainer = document.getElementById('left-particles');
+            const rightContainer = document.getElementById('right-particles');
+
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'floating-particle';
+                const size = Math.random() * 4 + 2;
+                const duration = 15 + Math.random() * 10;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.bottom = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                particle.style.setProperty('--float-duration', `${duration}s`);
+                particle.style.setProperty('--y-end', `-${window.innerHeight + 100}px`);
+                leftContainer.appendChild(particle);
+            }
+
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'floating-particle';
+                const size = Math.random() * 4 + 2;
+                const duration = 15 + Math.random() * 10;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.bottom = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                particle.style.setProperty('--float-duration', `${duration}s`);
+                particle.style.setProperty('--y-end', `-${window.innerHeight + 100}px`);
+                rightContainer.appendChild(particle);
+            }
+        }
+
+
+        function setupIntersectionObserver() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.2
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.portfolio-sections .section-title').forEach(title => {
+                observer.observe(title);
+            });
+        }
+
+        window.addEventListener('load', () => {
+            resetReactor();
+            createFloatingParticles();
+            createSideParticles();
+            setupIntersectionObserver();
+        });
     </script>
 </body>
 </html>
