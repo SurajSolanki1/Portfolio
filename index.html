@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Full Page 3D Model</title>
+  <title>Full Page 3D Module</title>
   <style>
     body {
       margin: 0;
-      overflow: hidden; /* This prevents scrollbars from appearing */
+      overflow: hidden; /* Prevents scrollbars from appearing */
     }
     canvas {
       display: block;
@@ -25,38 +25,35 @@
   </script>
   <script type="module">
     import * as THREE from 'three';
-
-    // 1. Setup the Scene, Camera, and Renderer
+    
+    // Set up the scene, camera, and renderer
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
 
-    // 2. Make the Renderer Fill the Entire Window
+    // Make the renderer fill the entire window
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // 3. Create a simple 3D Object (a Cube)
+    // Create a simple 3D object (a cube)
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
     camera.position.z = 5;
 
-    // 4. Handle Window Resize to Maintain Full-Page View
+    // Handle window resize to maintain full-page view
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // 5. Animation Loop
+    // Animation loop
     function animate() {
       requestAnimationFrame(animate);
-
-      // Rotate the cube for visual effect
       cube.rotation.x += 0.01;
       cube.rotation.y += 0.01;
-
       renderer.render(scene, camera);
     }
     animate();
