@@ -129,13 +129,6 @@
         }
 
         /* Right-side Spinning Circuit Ring animation */
-        .right-anim {
-            width: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         .right-anim::before {
             content: '';
             width: 50px;
@@ -464,6 +457,8 @@
             <a href="YOUR_RESUME_LINK_HERE" target="_blank" class="contact-button" style="margin-left: 15px;">Download Resume</a>
         </div>
     </div>
+    
+    <audio id="reactorSound" src="4.mp3" preload="auto"></audio>
 
     <script>
         const reactor = document.getElementById('reactor');
@@ -473,6 +468,7 @@
         const body = document.body;
         const quoteText = document.getElementById('quoteText');
         const profileLogo = document.getElementById('profileLogo');
+        const reactorSound = document.getElementById('reactorSound');
 
         const quotes = [
             "\"Actual Talent Means Having Fortitude To Prove One's Ability\"",
@@ -524,6 +520,8 @@
             lightningStarted = false;
             document.querySelectorAll('.particle, .smoke-particle, .lightning, .lightning-segment').forEach(el => el.remove());
             reactor.classList.remove('clicked');
+            reactorSound.pause();
+            reactorSound.currentTime = 0;
         }
 
         function createLightningSegment(startX, startY, endX, endY, width, progress, containerEl) {
@@ -715,6 +713,8 @@
                 return;
             }
             reactor.classList.add('clicked');
+            reactorSound.play();
+            
             clearInterval(loadingInterval);
             clearInterval(postChargeInterval);
             if (particleSpawnTimer) clearTimeout(particleSpawnTimer);
@@ -882,7 +882,6 @@
                 rightContainer.appendChild(particle);
             }
         }
-
 
         function setupIntersectionObserver() {
             const observerOptions = {
