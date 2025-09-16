@@ -127,6 +127,7 @@
       align-items: center;
       justify-content: center;
       position: relative;
+      z-index: 20;
     }
 
     .reactor {
@@ -135,7 +136,7 @@
       border-radius: 50%;
       cursor: pointer;
       position: relative;
-      z-index: 10;
+      z-index: 30;
       animation: subtle-breathe 2s ease-in-out infinite;
     }
 
@@ -148,6 +149,7 @@
         0 0 20px rgba(255, 255, 0, 0.8),
         inset 0 0 15px rgba(255, 255, 0, 0.9);
       transition: all 0.2s linear;
+      z-index: 40;
     }
 
     /* Lightning ring around the orb */
@@ -214,6 +216,11 @@
     @keyframes subtle-breathe {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.01); }
+    }
+    
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
     /* Explosion Burst effect */
