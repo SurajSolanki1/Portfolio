@@ -1,147 +1,635 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Suraj Solanki - Infinite Ideas ♾️</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --yellow-primary:#FFD400;
-      --yellow-accent:#FFB100;
-      --dark:#1A1A1A;
-      --light:#FFFDEB;
-      --highlight:#FF6B00;
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:'Poppins',sans-serif;
-      background:linear-gradient(180deg,var(--light),#fff);
-      color:var(--dark);
-      overflow-x:hidden;
-    }
-    header{
-      background:linear-gradient(90deg,var(--yellow-primary),var(--yellow-accent));
-      text-align:center;
-      padding:2rem 1rem;
-      position:relative;
-      overflow:hidden;
-    }
-    header::after{
-      content:"";
-      position:absolute;
-      top:-50px;right:-50px;
-      width:200px;height:200px;
-      background:rgba(255,255,255,0.25);
-      border-radius:50%;
-      filter:blur(30px);
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      gap:.5rem;
-    }
-    h1{
-      font-size:2.5rem;
-      background:linear-gradient(90deg,#000,#4a4a4a);
-      -webkit-background-clip:text;
-      color:transparent;
-    }
-    .tagline{font-weight:600;margin-top:4px;color:#333}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Suraj Solanki - Infinite Ideas ♾️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* Existing Portfolio Styles */
+        :root {
+            --yellow-primary: #FFD400;
+            --yellow-accent: #FFB100;
+            --dark: #1A1A1A;
+            --light: #FFFDEB;
+            --highlight: #FF6B00;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, var(--light), #fff);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+        header {
+            background: linear-gradient(90deg, var(--yellow-primary), var(--yellow-accent));
+            text-align: center;
+            padding: 2rem 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        header::after {
+            content: "";
+            position: absolute;
+            top: -50px; right: -50px;
+            width: 200px; height: 200px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            filter: blur(30px);
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: .5rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #000, #4a4a4a);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .tagline { font-weight: 600; margin-top: 4px; color: #333; }
+        main { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+        section.card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 1.4rem;
+            margin-bottom: 1.6rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+        h2 {
+            color: var(--yellow-accent);
+            margin-bottom: 0.8rem;
+            font-size: 1.6rem;
+            text-shadow: 0 0 8px rgba(255, 212, 0, 0.5);
+        }
+        .skills { display: flex; flex-wrap: wrap; gap: .6rem; }
+        .chip {
+            background: linear-gradient(90deg, var(--yellow-primary), var(--yellow-accent));
+            padding: .45rem .9rem;
+            border-radius: 999px;
+            color: #111; font-weight: 700;
+            box-shadow: 0 0 10px rgba(255, 212, 0, 0.5);
+            transition: 0.3s;
+        }
+        .chip:hover {
+            box-shadow: 0 0 20px rgba(255, 212, 0, 0.8), 0 0 40px rgba(255, 212, 0, 0.6);
+            transform: scale(1.1);
+        }
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+        .model-card {
+            border-radius: 16px;
+            overflow: hidden;
+            background: #fff;
+            transition: transform .3s ease, box-shadow .3s ease;
+            cursor: pointer;
+        }
+        .model-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 25px rgba(255, 212, 0, 0.6);
+        }
+        .model-thumb {
+            height: 240px;
+            background: #FFF5CC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+        .model-body { padding: 0.9rem; }
+        footer { text-align: center; margin-top: 2rem; color: #666; font-size: 0.9rem; }
 
-    main{max-width:1100px;margin:2rem auto;padding:0 1rem}
-    section.card{
-      background:#fff;
-      border-radius:16px;
-      padding:1.4rem;
-      margin-bottom:1.6rem;
-      box-shadow:0 6px 20px rgba(0,0,0,0.08)
-    }
-    h2{
-      color:var(--yellow-accent);
-      margin-bottom:0.8rem;
-      font-size:1.6rem;
-      text-shadow:0 0 8px rgba(255,212,0,0.5)
-    }
-
-    .skills{display:flex;flex-wrap:wrap;gap:.6rem}
-    .chip{
-      background:linear-gradient(90deg,var(--yellow-primary),var(--yellow-accent));
-      padding:.45rem .9rem;
-      border-radius:999px;
-      color:#111;font-weight:700;
-      box-shadow:0 0 10px rgba(255,212,0,0.5);
-      transition:0.3s;
-    }
-    .chip:hover{
-      box-shadow:0 0 20px rgba(255,212,0,0.8), 0 0 40px rgba(255,212,0,0.6);
-      transform:scale(1.1);
-    }
-
-    .models-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:1rem
-    }
-    .model-card{
-      border-radius:16px;
-      overflow:hidden;
-      background:#fff;
-      transition:transform .3s ease,box-shadow .3s ease;
-      cursor:pointer
-    }
-    .model-card:hover{
-      transform:scale(1.03);
-      box-shadow:0 0 25px rgba(255,212,0,0.6)
-    }
-    .model-thumb{
-      height:240px;
-      background:#FFF5CC;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:700;
-      color:#aaa;
-      font-size:1.1rem
-    }
-    .model-body{padding:0.9rem}
-
-    footer{text-align:center;margin-top:2rem;color:#666;font-size:0.9rem}
-  </style>
+        /* New Reactor Core Styles */
+        body {
+            background-color: #000000;
+            transition: background-color 0.1s ease-in-out;
+            overflow: hidden;
+            height: 100vh;
+        }
+        .container {
+            width: 400px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .reactor {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+            animation: subtle-breathe 2s ease-in-out infinite;
+        }
+        .reactor-core {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 255, 0, 0.3));
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.8), inset 0 0 15px rgba(255, 255, 0, 0.9);
+            transition: all 0.2s linear;
+        }
+        .lightning-ring {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .lightning-arc {
+            position: absolute;
+            background: rgba(255, 165, 0, 0.7);
+            border-radius: 2px;
+            transform-origin: center center;
+            z-index: 5;
+            opacity: 0;
+            box-shadow: 0 0 8px rgba(255, 165, 0, 0.8);
+            animation: arc-pulse 3s infinite;
+        }
+        @keyframes arc-pulse {
+            0%, 100% { opacity: 0.3; box-shadow: 0 0 8px rgba(255, 165, 0, 0.5); }
+            50% { opacity: 0.9; box-shadow: 0 0 15px rgba(255, 200, 100, 1), 0 0 25px rgba(255, 200, 100, 0.7); }
+        }
+        @keyframes arc-crackle {
+            0% { opacity: 0; transform: scale(0.95) rotate(0deg); }
+            20% { opacity: 0.9; transform: scale(1.02) rotate(1deg); }
+            40% { opacity: 0.7; transform: scale(0.98) rotate(-1deg); }
+            60% { opacity: 1; transform: scale(1.03) rotate(2deg); }
+            80% { opacity: 0.8; transform: scale(0.99) rotate(-2deg); }
+            100% { opacity: 0; transform: scale(0.95) rotate(0deg); }
+        }
+        @keyframes subtle-breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.01); }
+        }
+        .explosion-effect {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            opacity: 0;
+            animation: none;
+            pointer-events: none;
+            z-index: 15;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        @keyframes final-explosion-burst {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0.8;
+                box-shadow: 0 0 50px 25px rgba(255, 255, 255, 0.8), 0 0 80px 40px rgba(255, 200, 0, 0.8), 0 0 120px 60px rgba(255, 100, 0, 0.6);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(2.5);
+                opacity: 1;
+                box-shadow: 0 0 100px 50px rgba(255, 255, 255, 1), 0 0 150px 75px rgba(255, 200, 0, 1), 0 0 200px 100px rgba(255, 100, 0, 0.8);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(5);
+                opacity: 0;
+                box-shadow: 0 0 0 0 transparent;
+            }
+        }
+        .smoke-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(200, 200, 200, 0.5);
+            border-radius: 50%;
+            animation: smoke-float 5s ease-out forwards;
+            opacity: 0;
+            z-index: 9;
+        }
+        @keyframes smoke-float {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            5% { opacity: 0.5; }
+            100% { transform: translateY(-200px) scale(2); opacity: 0; }
+        }
+        .lightning {
+            position: absolute;
+            background: rgba(255, 165, 0, 0.8);
+            border-radius: 2px;
+            transform-origin: center bottom;
+            z-index: 8;
+            opacity: 0;
+            animation: lightning-flicker 1.5s ease-out forwards;
+            box-shadow: 0 0 10px rgba(255, 200, 100, 0.8);
+        }
+        @keyframes lightning-flicker {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            40% { opacity: 0.7; }
+            60% { opacity: 1; }
+            80% { opacity: 0.6; }
+            100% { opacity: 0; }
+        }
+        .lightning-segment {
+            position: absolute;
+            background: rgba(255, 165, 0, 0.9);
+            border-radius: 1px;
+            z-index: 8;
+            opacity: 0;
+            box-shadow: 0 0 8px rgba(255, 200, 100, 0.9);
+            transform-origin: center bottom;
+            animation: lightning-flicker 1.5s forwards;
+        }
+        .fire-particle {
+            position: absolute;
+            border-radius: 50%;
+            z-index: 7;
+            pointer-events: none;
+            animation: fire-float 3s ease-out forwards;
+            opacity: 0;
+        }
+        @keyframes fire-float {
+            0% { transform: translate(0, 0) scale(0.5); opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { transform: translate(var(--end-x), var(--end-y)) scale(1.5); opacity: 0; }
+        }
+    </style>
 </head>
 <body>
-  
-  <div id="container"></div>
-
-  <header>
-    <div class="brand">
-      <h1>Suraj <span style="color:var(--highlight)">Solanki</span></h1>
-      <div class="tagline">Infinite Ideas ♾️ | Software Engineer • UI/UX • SEO</div>
-    </div>
-  </header>
-
-  <main>
-    <section class="card" id="projects">
-      <h2>Featured Projects</h2>
-      <div class="models-grid">
-        <div class="model-card" onclick="window.location.href='solar-system/solar-system.html';">
-          <div class="model-thumb">
-            <img src="solar-system/solar-system-thumb.jpg" alt="An interactive 3D solar system with spinning planets."/>
-          </div>
-          <div class="model-body">
-            <h3>Interactive 3D Solar System</h3>
-            <p>A web-based 3D solar system built with Three.js, showcasing custom textures and visual effects.</p>
-          </div>
+    
+    <header>
+        <div class="brand">
+            <h1>Suraj <span style="color:var(--highlight)">Solanki</span></h1>
+            <div class="tagline">Infinite Ideas ♾️ | Software Engineer • UI/UX • SEO</div>
         </div>
-      </div>
-    </section>
-  </main>
+    </header>
 
-  <footer>
-    © 2025 Suraj Solanki — Built with Infinite Ideas ♾️
-  </footer>
+    <main>
+                <div class="container">
+            <div class="lightning-ring" id="lightningRing"></div>
+            <div class="reactor" id="reactor">
+                <div class="reactor-core" id="reactorCore"></div>
+            </div>
+            <div class="explosion-effect" id="explosionEffect"></div>
+        </div>
+    </main>
 
+    <footer>
+        © 2025 Suraj Solanki — Built with Infinite Ideas ♾️
+    </footer>
+    
+        <script>
+        const reactor = document.getElementById('reactor');
+        const reactorCore = document.getElementById('reactorCore');
+        const explosionEffect = document.getElementById('explosionEffect');
+        const lightningRing = document.getElementById('lightningRing');
+        const container = document.querySelector('.container');
+        const body = document.body;
+        let loadingInterval;
+        let postChargeInterval;
+        let particleSpawnTimer;
+        let smokeSpawnTimer;
+        let lightningSpawnTimer;
+        let fireSpawnTimer;
+        let arcSpawnInterval;
+        let lightningStarted = false;
+        function resetReactor() {
+            clearInterval(loadingInterval);
+            clearInterval(postChargeInterval);
+            clearInterval(arcSpawnInterval);
+            if (particleSpawnTimer) clearTimeout(particleSpawnTimer);
+            if (smokeSpawnTimer) clearTimeout(smokeSpawnTimer);
+            if (lightningSpawnTimer) clearTimeout(lightningSpawnTimer);
+            if (fireSpawnTimer) clearTimeout(fireSpawnTimer);
+            body.style.backgroundColor = '#000000';
+            reactorCore.style.boxShadow = `
+                0 0 20px rgba(255, 255, 0, 0.8),
+                0 0 40px rgba(255, 165, 0, 0.4),
+                inset 0 0 15px rgba(255, 255, 0, 0.9)
+            `;
+            reactorCore.style.background = 'radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 255, 0, 0.3))';
+            reactor.style.animation = 'subtle-breathe 2s ease-in-out infinite';
+            lightningRing.style.opacity = '0';
+            lightningStarted = false;
+            document.querySelectorAll('.particle, .smoke-particle, .lightning, .lightning-arc, .lightning-segment, .fire-particle').forEach(el => el.remove());
+        }
+        function createLightningSegment(startX, startY, endX, endY, width, progress, containerEl) {
+            const segment = document.createElement('div');
+            segment.className = 'lightning-segment';
+            const dx = endX - startX;
+            const dy = endY - startY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+            segment.style.width = `${distance}px`;
+            segment.style.height = `${width}px`;
+            segment.style.left = `${startX}px`;
+            segment.style.top = `${startY}px`;
+            segment.style.transform = `rotate(${angle}deg)`;
+            segment.style.transformOrigin = '0 0';
+            const intensity = 0.5 + (progress / 200);
+            segment.style.boxShadow = `0 0 ${10 + progress/5}px rgba(255, 165, 0, ${intensity})`;
+            segment.style.background = `linear-gradient(90deg, transparent 0%, rgba(255, 165, 0, ${0.3 + intensity/3}) 20%, rgba(255, 200, 100, ${0.5 + intensity/2}) 50%, rgba(255, 165, 0, ${0.3 + intensity/3}) 80%, transparent 100%)`;
+            segment.style.opacity = '0.8';
+            containerEl.appendChild(segment);
+            setTimeout(() => {
+                if (segment.parentNode) {
+                    segment.parentNode.removeChild(segment);
+                }
+            }, 1200);
+            return segment;
+        }
+        function createMultiSegmentLightning(startX, startY, endX, endY, width, progress, segments) {
+            const containerEl = document.querySelector('.container');
+            const points = [];
+            points.push({x: startX, y: startY});
+            const dx = endX - startX;
+            const dy = endY - startY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            for (let i = 1; i < segments; i++) {
+                const t = i / segments;
+                const midX = startX + dx * t;
+                const midY = startY + dy * t;
+                const offset = distance * 0.05 * (Math.random() - 0.5);
+                const angle = Math.atan2(dy, dx) + Math.PI/2;
+                points.push({
+                    x: midX + Math.cos(angle) * offset,
+                    y: midY + Math.sin(angle) * offset
+                });
+            }
+            points.push({x: endX, y: endY});
+            for (let i = 0; i < points.length - 1; i++) {
+                createLightningSegment(
+                    points[i].x,
+                    points[i].y,
+                    points[i+1].x,
+                    points[i+1].y,
+                    width,
+                    progress,
+                    containerEl
+                );
+            }
+        }
+        function createPlanetaryLightning(startX, startY, endX, endY, width, progress) {
+            const segments = 2 + Math.floor(Math.random() * 2);
+            createMultiSegmentLightning(startX, startY, endX, endY, width, progress, segments);
+        }
+        function createLightningRing(progress) {
+            document.querySelectorAll('.lightning-arc, .lightning-segment').forEach(el => el.remove());
+            const containerRect = container.getBoundingClientRect();
+            const containerCenterX = containerRect.width / 2;
+            const containerCenterY = containerRect.height / 2;
+            for (let i = 0; i < 2; i++) {
+                const irregularity = 0.9 + Math.random() * 0.2;
+                const radius = 150 * irregularity;
+                const angle = (i / 2) * Math.PI * 2;
+                const angleOffset = (Math.random() - 0.5) * 0.1;
+                const finalAngle = angle + angleOffset;
+                const startX = containerCenterX + Math.cos(finalAngle) * (radius * 0.8);
+                const startY = containerCenterY + Math.sin(finalAngle) * (radius * 0.8);
+                const endX = containerCenterX + Math.cos(finalAngle) * (radius * 1.2);
+                const endY = containerCenterY + Math.sin(finalAngle) * (radius * 1.2);
+                const width = 2 + (progress / 25);
+                createPlanetaryLightning(startX, startY, endX, endY, width, progress);
+            }
+        }
+        function getOrbColorFromProgress(p) {
+            const yellowToOrange = p / 100;
+            const r = 255;
+            const g = Math.floor(255 * (1 - yellowToOrange * 0.5));
+            const b = 0;
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+        function getBackgroundColorFromProgress(p) {
+            const initialBrightness = 0;
+            const finalBrightness = 50;
+            const brightnessRange = finalBrightness - initialBrightness;
+            const currentBrightness = initialBrightness + (brightnessRange * (p / 100));
+            return `rgb(${currentBrightness}, ${currentBrightness}, ${currentBrightness})`;
+        }
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            const orbSize = 150;
+            const x = Math.random() * orbSize;
+            const y = Math.random() * orbSize;
+            particle.style.left = `calc(50% - 75px + ${x}px)`;
+            particle.style.top = `calc(50% - 75px + ${y}px)`;
+            reactor.appendChild(particle);
+            particle.addEventListener('animationend', () => particle.remove());
+        }
+        function createSmokeParticle() {
+            const smoke = document.createElement('div');
+            smoke.className = 'smoke-particle';
+            const container = document.querySelector('.container');
+            const x = Math.random() * 400;
+            const y = 200 + (Math.random() * 50);
+            smoke.style.left = `${x}px`;
+            smoke.style.top = `${y}px`;
+            container.appendChild(smoke);
+            smoke.addEventListener('animationend', () => smoke.remove());
+        }
+        function createLightning(progress) {
+            const containerRect = container.getBoundingClientRect();
+            const containerCenterX = containerRect.width / 2;
+            const containerCenterY = containerRect.height / 2;
+            const angle = Math.random() * Math.PI * 2;
+            const length = 50 + (progress * 2);
+            const width = 2 + (progress / 25);
+            const startX = containerCenterX + Math.cos(angle) * 75;
+            const startY = containerCenterY + Math.sin(angle) * 75;
+            const endX = startX + Math.cos(angle) * length;
+            const endY = startY + Math.sin(angle) * length;
+            createPlanetaryLightning(startX, startY, endX, endY, width, progress);
+        }
+        function createFireParticle(progress) {
+            const fire = document.createElement('div');
+            fire.className = 'fire-particle';
+            const orbRect = reactor.getBoundingClientRect();
+            const orbCenterX = orbRect.left + orbRect.width / 2;
+            const orbCenterY = orbRect.top + orbRect.height / 2;
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 100 + Math.random() * (window.innerWidth * 0.8);
+            const endX = Math.cos(angle) * distance;
+            const endY = Math.sin(angle) * distance;
+            fire.style.setProperty('--end-x', `${endX}px`);
+            fire.style.setProperty('--end-y', `${endY}px`);
+            const size = 5 + (progress / 10);
+            fire.style.width = `${size}px`;
+            fire.style.height = `${size}px`;
+            const fireIntensity = 0.5 + (progress / 200);
+            fire.style.background = `radial-gradient(circle, rgba(255, 255, 0, ${fireIntensity}), rgba(255, 165, 0, ${fireIntensity * 0.8}), rgba(255, 0, 0, ${fireIntensity * 0.6}))`;
+            fire.style.boxShadow = `0 0 ${5 + progress/10}px rgba(255, 100, 0, ${fireIntensity})`;
+            fire.style.left = `${orbCenterX}px`;
+            fire.style.top = `${orbCenterY}px`;
+            document.body.appendChild(fire);
+            fire.addEventListener('animationend', () => {
+                if (fire.parentNode) {
+                    fire.parentNode.removeChild(fire);
+                }
+            });
+        }
+        function spawnFireParticles(progress) {
+            createFireParticle(progress);
+            if (progress < 100) {
+                const spawnRate = Math.max(50, 300 - (progress * 2));
+                fireSpawnTimer = setTimeout(() => spawnFireParticles(progress), spawnRate);
+            }
+        }
+        function finalExplosionBurst() {
+            explosionEffect.style.animation = 'none';
+            void explosionEffect.offsetWidth;
+            explosionEffect.style.animation = 'final-explosion-burst 1s ease-out forwards';
+            body.style.backgroundColor = 'rgb(255, 255, 255)';
+            const containerRect = container.getBoundingClientRect();
+            const containerCenterX = containerRect.width / 2;
+            const containerCenterY = containerRect.height / 2;
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    createFinalExplosionLightning(containerCenterX, containerCenterY);
+                }, i * 100);
+            }
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    createFireParticle(100);
+                }, i * 30);
+            }
+            setTimeout(() => {
+                startPostChargeEffect();
+            }, 1000);
+        }
+        function createFinalExplosionLightning(centerX, centerY) {
+            const angle = Math.random() * Math.PI * 2;
+            const length = 200 + Math.random() * 100;
+            const width = 5 + Math.random() * 3;
+            const startX = centerX;
+            const startY = centerY;
+            const endX = startX + Math.cos(angle) * length;
+            const endY = startY + Math.sin(angle) * length;
+            createPlanetaryLightning(startX, startY, endX, endY, width, 100);
+        }
+        reactor.addEventListener('click', () => {
+            clearInterval(loadingInterval);
+            clearInterval(postChargeInterval);
+            clearInterval(arcSpawnInterval);
+            if (particleSpawnTimer) clearTimeout(particleSpawnTimer);
+            if (smokeSpawnTimer) clearTimeout(smokeSpawnTimer);
+            if (lightningSpawnTimer) clearTimeout(lightningSpawnTimer);
+            if (fireSpawnTimer) clearTimeout(fireSpawnTimer);
+            document.querySelectorAll('.particle, .smoke-particle, .lightning, .lightning-arc, .lightning-segment, .fire-particle').forEach(el => el.remove());
+            let progress = 0;
+            function spawnParticles() {
+                createParticle();
+                if (progress < 100) {
+                    const spawnRate = Math.max(20, 200 - (progress * 1.5));
+                    particleSpawnTimer = setTimeout(spawnParticles, spawnRate);
+                }
+            }
+            function spawnSmoke() {
+                createSmokeParticle();
+                if (progress < 100) {
+                    const spawnRate = Math.max(50, 400 - (progress * 3));
+                    smokeSpawnTimer = setTimeout(spawnSmoke, spawnRate);
+                }
+            }
+            function spawnLightning() {
+                createLightning(progress);
+                if (progress < 100) {
+                    const spawnRate = Math.max(100, 600 - (progress * 5));
+                    lightningSpawnTimer = setTimeout(spawnLightning, spawnRate);
+                }
+            }
+            function spawnFire() {
+                spawnFireParticles(progress);
+            }
+            spawnParticles();
+            spawnSmoke();
+            setTimeout(() => {
+                spawnLightning();
+                lightningStarted = true;
+                lightningRing.style.opacity = '1';
+            }, 800);
+            setTimeout(() => {
+                spawnFire();
+            }, 500);
+            loadingInterval = setInterval(() => {
+                if (progress < 100) {
+                    progress += 0.5;
+                } else {
+                    progress = 100;
+                }
+                body.style.backgroundColor = getBackgroundColorFromProgress(progress);
+                const orbBrightness = Math.floor(progress * 4);
+                const orbColor = getOrbColorFromProgress(progress);
+                reactorCore.style.boxShadow = `
+                    0 0 ${20 + orbBrightness}px rgba(255, ${100 + progress * 0.5}, 0, 1),
+                    0 0 ${40 + orbBrightness * 2}px rgba(255, 165, 0, ${0.4 + progress/250}),
+                    inset 0 0 ${10 + orbBrightness * 0.5}px rgba(255, ${100 + progress * 0.5}, 0, 0.5)
+                `;
+                reactorCore.style.background = `
+                    radial-gradient(circle at 70% 30%, rgba(255, ${200 - progress * 0.7}, 0, 0.8), transparent 70%),
+                    radial-gradient(circle at 30% 70%, rgba(255, ${120 - progress * 0.3}, 0, 0.6), transparent 60%),
+                    radial-gradient(circle, ${orbColor}, transparent 90%)`;
+                reactor.style.animation = `breathe ${2 - (progress/100)}s ease-in-out infinite`;
+                if (lightningStarted && progress > 10) {
+                    createLightningRing(progress);
+                }
+                if (progress >= 100) {
+                    clearInterval(loadingInterval);
+                    if (particleSpawnTimer) clearTimeout(particleSpawnTimer);
+                    if (smokeSpawnTimer) clearTimeout(smokeSpawnTimer);
+                    if (lightningSpawnTimer) clearTimeout(lightningSpawnTimer);
+                    if (fireSpawnTimer) clearTimeout(fireSpawnTimer);
+                    reactor.style.animation = 'none';
+                    finalExplosionBurst();
+                }
+            }, 50);
+        });
+        function startPostChargeEffect() {
+            reactorCore.style.boxShadow = `
+                0 0 30px rgba(255, 165, 0, 1),
+                0 0 60px rgba(255, 165, 0, 0.6),
+                inset 0 0 20px rgba(255, 165, 0, 0.8)
+            `;
+            reactorCore.style.background = `radial-gradient(circle, rgba(255, 165, 0, 1), rgba(255, 165, 0, 0.5))`;
+            reactor.style.animation = 'subtle-breathe 2s ease-in-out infinite';
+            lightningRing.style.opacity = '0';
+            let brightness = 255;
+            const fadeTime = 30000;
+            const fadeStep = brightness / (fadeTime / 50);
+            postChargeInterval = setInterval(() => {
+                brightness = Math.max(0, brightness - fadeStep);
+                body.style.backgroundColor = `rgb(${brightness}, ${brightness}, ${brightness})`;
+                const yellowRatio = 1 - (brightness / 255);
+                const r = 255;
+                const g = 165 + Math.floor(90 * yellowRatio);
+                const b = 0;
+                reactorCore.style.boxShadow = `
+                    0 0 30px rgba(${r}, ${g}, ${b}, 1),
+                    0 0 50px rgba(${r}, ${g}, ${b}, 0.6),
+                    inset 0 0 20px rgba(${r}, ${g}, ${b}, 0.8)
+                `;
+                reactorCore.style.background = `radial-gradient(circle, rgba(${r}, ${g}, ${b}, 1), rgba(${r}, ${g}, ${b}, 0.5))`;
+                if (brightness <= 0) {
+                    clearInterval(postChargeInterval);
+                    body.style.backgroundColor = '#000000';
+                    reactorCore.style.boxShadow = `
+                        0 0 20px rgba(255, 255, 0, 0.8),
+                        0 0 40px rgba(255, 165, 0, 0.4),
+                        inset 0 0 15px rgba(255, 255, 0, 0.9)
+                    `;
+                    reactorCore.style.background = 'radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 255, 0, 0.3))';
+                }
+            }, 50);
+        }
+        resetReactor();
+    </script>
 </body>
 </html>
