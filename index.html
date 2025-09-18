@@ -437,7 +437,7 @@
         <h2 class="section-title">Projects</h2>
         <div class="section-content">
             <ul>
-                <a href="solar-system.html" style="text-decoration: none;">
+                <a href="solar-system/solar-system.html" style="text-decoration: none;">
                     <li>
                         <h4>Solar System Project</h4>
                         <p>An interactive, 3D visualization of the solar system, showcasing planetary orbits and characteristics.</p>
@@ -549,7 +549,7 @@
             segment.style.transformOrigin = '0 0';
 
             const intensity = 0.5 + (progress / 200);
-            segment.style.box-shadow = `0 0 ${10 + progress/5}px rgba(255, 165, 0, ${intensity})`;
+            segment.style.boxShadow = `0 0 ${10 + progress/5}px rgba(255, 165, 0, ${intensity})`;
 
             segment.style.background = `linear-gradient(90deg,
                 transparent 0%,
@@ -766,7 +766,7 @@
                 const orbBrightness = Math.floor(progress * 4);
                 const orbColor = getOrbColorFromProgress(progress);
 
-                reactorCore.style.box-shadow = `
+                reactorCore.style.boxShadow = `
                     0 0 ${20 + orbBrightness}px rgba(255, ${100 + progress * 0.5}, 0, 1),
                     0 0 ${40 + orbBrightness * 2}px rgba(255, 165, 0, ${0.4 + progress/250}),
                     inset 0 0 ${10 + orbBrightness * 0.5}px rgba(255, ${100 + progress * 0.5}, 0, 0.5)
@@ -796,7 +796,7 @@
         });
 
         function startPostChargeEffect() {
-            reactorCore.style.box-shadow = `
+            reactorCore.style.boxShadow = `
                 0 0 30px rgba(255, 165, 0, 1),
                 0 0 60px rgba(255, 165, 0, 0.6),
                 inset 0 0 20px rgba(255, 165, 0, 0.8)
@@ -817,7 +817,7 @@
                 const g = 165 + Math.floor(90 * yellowRatio);
                 const b = 0;
 
-                reactorCore.style.box-shadow = `
+                reactorCore.style.boxShadow = `
                     0 0 30px rgba(${r}, ${g}, ${b}, 1),
                     0 0 50px rgba(${r}, ${g}, ${b}, 0.6),
                     inset 0 0 20px rgba(${r}, ${g}, ${b}, 0.8)
@@ -893,7 +893,7 @@
         function setupIntersectionObserver() {
             const observerOptions = {
                 root: null,
-                root-margin: '0px',
+                rootMargin: '0px',
                 threshold: 0.2
             };
 
