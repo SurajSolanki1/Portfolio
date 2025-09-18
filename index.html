@@ -122,10 +122,23 @@
             color: #ffd700;
         }
         
-        /* New Animations (only right-side kept) */
+        /* New Animations */
         .header-animation {
             height: 150px;
             position: relative;
+        }
+
+        /* Left-side Spinning Circuit Ring animation */
+        .left-anim::before {
+            content: '';
+            width: 50px;
+            height: 50px;
+            border: 2px solid transparent;
+            border-top-color: #ffd700;
+            border-bottom-color: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+            animation: spin-ring 2s linear infinite;
         }
 
         /* Right-side Spinning Circuit Ring animation */
@@ -138,7 +151,7 @@
             border-bottom-color: #ffd700;
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-            animation: spin-ring 2s linear infinite;
+            animation: spin-ring 2s linear infinite reverse; /* Changed to reverse for effect */
         }
         
         @keyframes spin-ring {
@@ -359,8 +372,10 @@
         ul li a {
             color: inherit;
             text-decoration: none;
-            display: block;
+            display: flex;
+            align-items: center;
             width: 100%;
+            gap: 15px;
         }
 
         ul li:hover {
@@ -371,6 +386,15 @@
         
         ul li strong {
             color: #ffd700;
+        }
+
+        /* Styling for the new thumbnail */
+        .project-thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ffd700;
         }
 
         .contact-button {
@@ -397,6 +421,7 @@
     <div class="side-particles right" id="right-particles"></div>
 
     <div class="portfolio-header">
+        <div class="header-animation left-anim"></div>
         <img src="1.png" alt="Suraj Solanki's logo" class="profile-logo" id="profileLogo" data-hover-src="2.png">
         <div class="header-animation right-anim"></div>
         <h3 id="quoteText">"Actual Talent Means Having Fortitude To Prove One's Ability"</h3>
@@ -437,12 +462,15 @@
         <h2 class="section-title">Projects</h2>
         <div class="section-content">
             <ul>
-                <a href="solar-system/solar-system.html" style="text-decoration: none;">
-                    <li>
-                        <h4>Solar System Project</h4>
-                        <p>An interactive, 3D visualization of the solar system, showcasing planetary orbits and characteristics.</p>
-                    </li>
-                </a>
+                <li>
+                    <a href="solar-system/solar-system.html">
+                        <img src="solar-system/solar-system-thumb.jpg" alt="Solar System Project Thumbnail" class="project-thumbnail">
+                        <div>
+                            <h4>Solar System Project</h4>
+                            <p>An interactive, 3D visualization of the solar system, showcasing planetary orbits and characteristics.</p>
+                        </div>
+                    </a>
+                </li>
                 <li>
                     <h4>Project 1: React E-Commerce Platform</h4>
                     <p>Developed a full-stack e-commerce site with a secure checkout system using React, Node.js, and MongoDB.</p>
