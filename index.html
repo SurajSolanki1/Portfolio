@@ -3,313 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suraj Solanki | Portfolio</title>
+    <title>Suraj Solanki - Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         body {
+            background-color: #000;
+            color: #f0f0f0;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            background-color: #000000;
-            transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding-top: 50px;
+            padding: 0;
             overflow-x: hidden;
-            position: relative;
+            transition: background-color 0.5s ease-in-out;
         }
 
         body.white-bg {
-            color: #333333;
-        }
-
-        body.white-bg a,
-        body.white-bg ul li strong,
-        body.white-bg .section-title {
-            color: #ffd700;
-        }
-
-        /* Floating background particles */
-        .floating-particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: float 10s infinite ease-in-out;
-            z-index: 1;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0); opacity: 0.5; }
-            50% { transform: translate(var(--x-offset), var(--y-offset)); opacity: 0.8; }
-            100% { transform: translate(0, 0); opacity: 0.5; }
-        }
-
-        /* New side particles */
-        .side-particles {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 15%;
-            z-index: 0;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .side-particles.left {
-            left: 0;
-        }
-        
-        .side-particles.right {
-            right: 0;
-        }
-
-        .side-particles .floating-particle {
-            animation: side-float var(--float-duration) infinite ease-in-out;
-        }
-
-        @keyframes side-float {
-            0% { transform: translateY(0); opacity: 0; }
-            5% { opacity: 0.2; }
-            95% { opacity: 0.2; }
-            100% { transform: translateY(var(--y-end)); opacity: 0; }
+            background-color: #ffffff;
+            color: #333;
         }
 
         .portfolio-header {
-            max-width: 800px;
+            position: relative;
             text-align: center;
-            margin-bottom: 50px;
-            padding: 0 20px;
-            opacity: 0;
-            animation: fade-in 1s forwards;
-            animation-delay: 0.5s;
-            /* Added Flexbox for alignment */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
+            padding: 80px 20px;
+            overflow: hidden;
         }
 
-        @keyframes fade-in {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .header-animation {
+            position: absolute;
+            top: 50%;
+            width: 50vw;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #ffd700);
+            z-index: 0;
+            opacity: 0.2;
+        }
+
+        .header-animation.left-anim {
+            left: 0;
+            transform: translateY(-50%) rotate(0deg);
+            background: linear-gradient(to right, transparent, #ffd700);
+            animation: pulse-left 5s infinite;
+        }
+
+        .header-animation.right-anim {
+            right: 0;
+            transform: translateY(-50%) rotate(0deg);
+            background: linear-gradient(to left, transparent, #ffd700);
+            animation: pulse-right 5s infinite;
         }
         
         .profile-logo {
-            width: 250px;
-            height: auto;
-            margin: 0 20px;
-            transition: transform 0.2s ease-in-out;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #ffd700;
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+            z-index: 10;
+            position: relative;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700; }
+            100% { box-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700; }
         }
 
-        .profile-logo:hover {
-            transform: scale(1.05);
-            cursor: pointer;
+        @keyframes pulse-left {
+            0% { transform: translateY(-50%) scaleX(0); opacity: 0; }
+            50% { transform: translateY(-50%) scaleX(1); opacity: 0.5; }
+            100% { transform: translateY(-50%) scaleX(0); opacity: 0; }
+        }
+
+        @keyframes pulse-right {
+            0% { transform: translateY(-50%) scaleX(0); opacity: 0; }
+            50% { transform: translateY(-50%) scaleX(1); opacity: 0.5; }
+            100% { transform: translateY(-50%) scaleX(0); opacity: 0; }
         }
 
         .portfolio-header h3 {
-            font-size: 1.2em;
-            color: #e0e0e0;
-            margin-top: 10px;
-            opacity: 0.8;
-            font-style: italic;
-            cursor: pointer;
-            transition: color 0.3s ease;
+            color: #fff;
+            margin-top: 20px;
+            font-size: 1.5em;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            transition: transform 0.3s ease-in-out;
         }
         
-        .portfolio-header h3:hover {
-            color: #ffd700;
-        }
-        
-        /* New Animations */
-        .header-animation {
-            height: 150px;
-            position: relative;
-        }
-
-        /* Left-side Spinning Circuit Ring animation */
-        .left-anim::before {
-            content: '';
-            width: 50px;
-            height: 50px;
-            border: 2px solid transparent;
-            border-top-color: #ffd700;
-            border-bottom-color: #ffd700;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-            animation: spin-ring 2s linear infinite;
-        }
-
-        /* Right-side Spinning Circuit Ring animation */
-        .right-anim::before {
-            content: '';
-            width: 50px;
-            height: 50px;
-            border: 2px solid transparent;
-            border-top-color: #ffd700;
-            border-bottom-color: #ffd700;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-            animation: spin-ring 2s linear infinite reverse; /* Changed to reverse for effect */
-        }
-        
-        @keyframes spin-ring {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        /* --- General Layout and Components (Unchanged) --- */
         .main-content-row {
             display: flex;
-            align-items: center;
             justify-content: center;
-            width: 100%;
-            gap: 40px;
-            margin-top: 50px;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 50px;
+            padding: 40px 20px;
         }
 
         .side-content {
             flex: 1;
-            max-width: 350px;
-            margin-top: 0;
-        }
-
-        .side-content .section-content {
-            margin-bottom: 0;
-        }
-        
-        /* Container for the 3D reactor animation */
-        .container {
-            width: 400px;
-            height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .reactor {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            cursor: pointer;
-            position: relative;
-            z-index: 10;
-            animation: subtle-breathe 2s ease-in-out infinite;
-        }
-
-        /* Pulse effect on reactor */
-        .reactor:not(.clicked)::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 215, 0, 0.5);
-            animation: pulse-border 2s infinite;
-            z-index: 9;
-        }
-
-        .reactor.clicked::before {
-            animation: none;
-            border-color: transparent;
-        }
-
-        @keyframes pulse-border {
-            0% { transform: scale(0.9); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 0.3; }
-            100% { transform: scale(0.9); opacity: 0.8; }
-        }
-
-        .reactor-core {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 255, 0, 0.3));
-            box-shadow:
-                0 0 20px rgba(255, 255, 0, 0.8),
-                inset 0 0 15px rgba(255, 255, 0, 0.9);
-            transition: all 0.2s linear;
-        }
-
-        @keyframes subtle-breathe {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.01); }
-        }
-
-        @keyframes final-explosion-burst {
-            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; box-shadow: 0 0 50px 25px rgba(255, 255, 255, 0.8), 0 0 80px 40px rgba(255, 200, 0, 0.8), 0 0 120px 60px rgba(255, 100, 0, 0.6); }
-            50% { transform: translate(-50%, -50%) scale(2.5); opacity: 1; box-shadow: 0 0 100px 50px rgba(255, 255, 255, 1), 0 0 150px 75px rgba(255, 200, 0, 1), 0 0 200px 100px rgba(255, 100, 0, 0.8); }
-            100% { transform: translate(-50%, -50%) scale(5); opacity: 0; box-shadow: 0 0 0 0 transparent; }
-        }
-
-        .smoke-particle {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: rgba(200, 200, 200, 0.5);
-            border-radius: 50%;
-            animation: smoke-float 5s ease-out forwards;
-            opacity: 0;
-            z-index: 9;
-        }
-
-        @keyframes smoke-float {
-            0% { transform: translateY(0) scale(0.5); opacity: 0; }
-            5% { opacity: 0.5; }
-            100% { transform: translateY(-200px) scale(2); opacity: 0; }
-        }
-
-        .lightning {
-            position: absolute;
-            background: rgba(255, 165, 0, 0.8);
-            border-radius: 2px;
-            transform-origin: center bottom;
-            z-index: 8;
-            opacity: 0;
-            animation: lightning-flicker 1.5s ease-out forwards;
-            box-shadow: 0 0 10px rgba(255, 200, 100, 0.8);
-        }
-
-        @keyframes lightning-flicker {
-            0% { opacity: 0; }
-            20% { opacity: 1; }
-            40% { opacity: 0.7; }
-            60% { opacity: 1; }
-            80% { opacity: 0.6; }
-            100% { opacity: 0; }
-        }
-
-        .lightning-segment {
-            position: absolute;
-            background: rgba(255, 165, 0, 0.9);
-            border-radius: 1px;
-            z-index: 8;
-            opacity: 0;
-            box-shadow: 0 0 8px rgba(255, 200, 100, 0.9);
-            transform-origin: center bottom;
-            animation: lightning-flicker 1.5s forwards;
-        }
-
-        /* New sections for portfolio */
-        .portfolio-sections {
-            max-width: 800px;
-            width: 100%;
-            margin-top: 80px;
-            padding: 0 20px;
+            min-width: 300px;
+            max-width: 450px;
+            text-align: center;
         }
 
         .section-title {
-            text-align: center;
             font-size: 2em;
+            font-weight: 700;
             color: #ffd700;
-            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
             position: relative;
-            opacity: 1;
-            transform: translateY(0);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
 
         .section-title.is-visible {
@@ -319,20 +127,11 @@
 
         .section-title::after {
             content: '';
+            display: block;
             width: 60px;
             height: 3px;
             background: #ffd700;
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        /* Override for the bottom section titles to animate on scroll */
-        .portfolio-sections .section-title {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            margin: 10px auto 0;
         }
 
         .section-content {
@@ -368,15 +167,6 @@
             gap: 15px;
             transition: all 0.2s ease-in-out;
         }
-        
-        ul li a {
-            color: inherit;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            width: 100%;
-            gap: 15px;
-        }
 
         ul li:hover {
             transform: translateY(-3px);
@@ -386,15 +176,6 @@
         
         ul li strong {
             color: #ffd700;
-        }
-
-        /* Styling for the new thumbnail */
-        .project-thumbnail {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #ffd700;
         }
 
         .contact-button {
@@ -414,6 +195,196 @@
             background-color: #fff;
             transform: scale(1.05);
         }
+
+        .container {
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .reactor {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.8), 0 0 40px rgba(255, 165, 0, 0.4);
+            transition: box-shadow 0.5s ease-in-out;
+            animation: subtle-breathe 2s ease-in-out infinite;
+        }
+
+        .reactor-core {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 255, 0, 0.3));
+            box-shadow: inset 0 0 15px rgba(255, 255, 0, 0.9);
+            transition: all 0.5s ease-in-out;
+        }
+
+        .reactor.clicked {
+            animation: none;
+        }
+
+        @keyframes subtle-breathe {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes breathe {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: #ffd700;
+            border-radius: 50%;
+            animation: radiate 1.5s linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes radiate {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+                box-shadow: 0 0 10px #ffd700;
+            }
+            100% {
+                transform: translate(var(--x), var(--y));
+                opacity: 0;
+                width: 1px;
+                height: 1px;
+                box-shadow: none;
+            }
+        }
+
+        .smoke-particle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: smoke-rise 3s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes smoke-rise {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100px) scale(2);
+                opacity: 0;
+            }
+        }
+
+        .explosion-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9), transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        @keyframes final-explosion-burst {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            50% {
+                width: 100vw;
+                height: 100vh;
+                opacity: 0.5;
+            }
+            100% {
+                width: 200vw;
+                height: 200vh;
+                opacity: 0;
+            }
+        }
+
+        .lightning-segment {
+            position: absolute;
+            transform-origin: 0 0;
+            height: 3px;
+            background-color: #ffd700;
+            box-shadow: 0 0 10px #ffd700;
+            pointer-events: none;
+        }
+        
+        .side-particles {
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 100px;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .side-particles.left {
+            left: 0;
+        }
+
+        .side-particles.right {
+            right: 0;
+        }
+
+        .floating-particle {
+            position: absolute;
+            background-color: #ffd700;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float var(--float-duration) ease-in-out infinite alternate;
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(0) translateX(0);
+                opacity: 0.5;
+            }
+            to {
+                transform: translateY(var(--y-end)) translateX(var(--x-offset));
+                opacity: 0.2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content-row {
+                flex-direction: column;
+            }
+            .side-content {
+                max-width: 100%;
+            }
+            .container {
+                width: 200px;
+                height: 200px;
+            }
+            .reactor {
+                width: 120px;
+                height: 120px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -422,7 +393,7 @@
 
     <div class="portfolio-header">
         <div class="header-animation left-anim"></div>
-        <img src="1.png" alt="Suraj Solanki's logo" class="profile-logo" id="profileLogo" data-hover-src="3-removebg-preview.png">
+        <img src="1.png" alt="Suraj Solanki's logo" class="profile-logo" id="profileLogo" data-hover-src="2.png">
         <div class="header-animation right-anim"></div>
         <h3 id="quoteText">"Actual Talent Means Having Fortitude To Prove One's Ability"</h3>
     </div>
@@ -462,15 +433,6 @@
         <h2 class="section-title">Projects</h2>
         <div class="section-content">
             <ul>
-                <li>
-                    <a href="solar-system/solar-system.html">
-                        <img src="solar-system/solar-system-thumb.jpg" alt="Solar System Project Thumbnail" class="project-thumbnail">
-                        <div>
-                            <h4>Solar System Project</h4>
-                            <p>An interactive, 3D visualization of the solar system, showcasing planetary orbits and characteristics.</p>
-                        </div>
-                    </a>
-                </li>
                 <li>
                     <h4>Project 1: React E-Commerce Platform</h4>
                     <p>Developed a full-stack e-commerce site with a secure checkout system using React, Node.js, and MongoDB.</p>
@@ -749,7 +711,6 @@
                 return;
             }
             reactor.classList.add('clicked');
-            
             clearInterval(loadingInterval);
             clearInterval(postChargeInterval);
             if (particleSpawnTimer) clearTimeout(particleSpawnTimer);
@@ -876,7 +837,7 @@
                 particle.style.height = `${size}px`;
                 particle.style.left = `${Math.random() * 100}%`;
                 particle.style.top = `${Math.random() * 100}%`;
-                particle.style.animation-delay = `${Math.random() * 5}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
                 particle.style.setProperty('--x-offset', `${(Math.random() - 0.5) * 50}px`);
                 particle.style.setProperty('--y-offset', `${(Math.random() - 0.5) * 50}px`);
                 document.body.appendChild(particle);
@@ -896,55 +857,31 @@
                 particle.style.height = `${size}px`;
                 particle.style.left = `${Math.random() * 100}%`;
                 particle.style.bottom = `${Math.random() * 100}%`;
-                particle.style.animation-delay = `${Math.random() * 15}s`;
                 particle.style.setProperty('--float-duration', `${duration}s`);
-                particle.style.setProperty('--y-end', `-${window.innerHeight + 100}px`);
-                leftContainer.appendChild(particle);
-            }
+                particle.style.setProperty('--y-end', `${window.innerHeight + 100}px`);
+                particle.style.animationDelay = `${Math.random() * 10}s`;
 
-            for (let i = 0; i < 30; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'floating-particle';
-                const size = Math.random() * 4 + 2;
-                const duration = 15 + Math.random() * 10;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.bottom = `${Math.random() * 100}%`;
-                particle.style.animation-delay = `${Math.random() * 15}s`;
-                particle.style.setProperty('--float-duration', `${duration}s`);
-                particle.style.setProperty('--y-end', `-${window.innerHeight + 100}px`);
-                rightContainer.appendChild(particle);
+                leftContainer.appendChild(particle);
+                rightContainer.appendChild(particle.cloneNode(true));
             }
         }
 
-        function setupIntersectionObserver() {
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.2
-            };
-
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('.portfolio-sections .section-title').forEach(title => {
-                observer.observe(title);
+        function handleScrollAnimations() {
+            const sections = document.querySelectorAll('.portfolio-sections .section-title');
+            sections.forEach(title => {
+                const rect = title.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    title.classList.add('is-visible');
+                }
             });
         }
+        
+        // Initial calls
+        createFloatingParticles();
+        createSideParticles();
 
-        window.addEventListener('load', () => {
-            resetReactor();
-            createFloatingParticles();
-            createSideParticles();
-            setupIntersectionObserver();
-        });
+        window.addEventListener('scroll', handleScrollAnimations);
+        window.addEventListener('DOMContentLoaded', handleScrollAnimations);
     </script>
 </body>
 </html>
