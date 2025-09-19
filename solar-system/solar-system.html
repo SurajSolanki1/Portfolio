@@ -1,268 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Realistic Solar System — 3D Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suraj Solanki | Portfolio</title>
     <style>
-        html,body { height:100%; margin:0; background:#000; font-family:Arial,Helvetica,sans-serif; color:#fff; }
-        #solarCanvas { width:100%; height:100vh; position:relative; overflow:hidden; }
-        #status {
-            position: absolute;
-            left: 12px;
-            top: 12px;
-            background: rgba(0,0,0,0.6);
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            z-index: 99;
-        }
-        #errorBox {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(20,20,20,0.95);
-            border: 1px solid #333;
-            padding: 18px;
-            border-radius: 8px;
-            display: none;
-            max-width: 720px;
-            text-align: left;
-            line-height: 1.4;
-            color: #ffd;
-        }
-        #btnSwitch {
-            margin-top:8px;
-            display:inline-block;
-            padding:6px 10px;
-            background:#00bcd4; color:#000; border-radius:6px; cursor:pointer; font-weight:700;
-        }
+        /* ... (all existing CSS remains exactly the same) ... */
     </style>
 </head>
 <body>
-    <div id="solarCanvas">
-        <div id="status">Initializing 3D…</div>
-        <div id="errorBox">
-            <strong>3D rendering is unavailable</strong>
-            <div id="errorText" style="margin-top:8px;"></div>
-            <div style="margin-top:12px; text-align:right;">
-                <button id="btnSwitch">Retry</button>
-            </div>
+    <!-- ... (all existing HTML remains exactly the same until the Projects section) ... -->
+
+    <div class="portfolio-sections">
+        <h2 class="section-title">Projects</h2>
+        <div class="section-content">
+            <ul>
+                <li>
+                    <h4>Solar System Simulation</h4>
+                    <p>Interactive 3D simulation of our solar system with realistic planetary motion and visual effects.</p>
+                    <a href="Portfolio/solar-system/solar-system.html" target="_blank" style="display: block; margin-top: 10px;">
+                        <img src="Portfolio/solar-system/solar-system-thumb.jpg" alt="Solar System Simulation" style="width: 100%; max-width: 300px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
+                    </a>
+                </li>
+                <li>
+                    <h4>Project 1: React E-Commerce Platform</h4>
+                    <p>Developed a full-stack e-commerce site with a secure checkout system using React, Node.js, and MongoDB.</p>
+                </li>
+                <li>
+                    <h4>Project 2: AI-Powered Chatbot</h4>
+                    <p>Built a conversational chatbot for customer support, leveraging machine learning and natural language processing.</p>
+                </li>
+            </ul>
         </div>
+        
+        <!-- ... (rest of the HTML remains exactly the same) ... -->
     </div>
 
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-            }
-        }
-    </script>
-    <script type="module">
-        import * as THREE from 'three';
-        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-        function isWebGLAvailable(){
-            try {
-                const canvas = document.createElement('canvas');
-                return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
-            } catch(e) { return false; }
-        }
-
-        const statusEl = document.getElementById('status');
-        const errorBox = document.getElementById('errorBox');
-        const errorText = document.getElementById('errorText');
-        const btnSwitch = document.getElementById('btnSwitch');
-
-        function showError(msg){
-            errorText.textContent = msg;
-            errorBox.style.display = 'block';
-            statusEl.style.display = 'none';
-            console.error(msg);
-        }
-
-        function hideError(){
-            errorBox.style.display = 'none';
-            statusEl.style.display = 'block';
-        }
-
-        if (!isWebGLAvailable()){
-            showError('WebGL not available in your browser. Try enabling hardware acceleration, update your browser, or open this page in Chrome/Edge/Firefox. Visit https://get.webgl.org/ to test.');
-            throw new Error('WebGL not available');
-        }
-
-        let container = document.getElementById('solarCanvas');
-        let scene, camera, renderer, controls, stars, animationId, clock, sun, planets = [];
-        
-        const loadingManager = new THREE.LoadingManager();
-        const textureLoader = new THREE.TextureLoader(loadingManager);
-
-        function initScene(){
-            hideError();
-            statusEl.textContent = 'Loading assets...';
-
-            loadingManager.onLoad = () => {
-                statusEl.textContent = 'Solar System ready — interact (drag/zoom)';
-                animate();
-            };
-
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(0, 30, 60);
-            camera.lookAt(0, 0, 0);
-
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-            renderer.setPixelRatio(window.devicePixelRatio || 1);
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setClearColor(0x000000, 1);
-
-            while (container.firstChild && container.firstChild.tagName === 'CANVAS') container.removeChild(container.firstChild);
-            container.appendChild(renderer.domElement);
-
-            controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.08;
-            controls.maxDistance = 150;
-            controls.minDistance = 5;
-
-            scene.add(new THREE.AmbientLight(0xffffff, 0.2));
-
-            addStarsBackground();
-            addSolarSystem();
-
-            clock = new THREE.Clock();
-        }
-
-        function addStarsBackground(){
-            const starGeometry = new THREE.BufferGeometry();
-            const starCount = 10000;
-            const positions = [];
-            for (let i = 0; i < starCount; i++) {
-                const x = (Math.random() - 0.5) * 800;
-                const y = (Math.random() - 0.5) * 800;
-                const z = (Math.random() - 0.5) * 800;
-                positions.push(x, y, z);
-            }
-            starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-            const starMaterial = new THREE.PointsMaterial({
-                color: 0xffffff,
-                size: 0.2,
-                transparent: true,
-                opacity: 0.8,
-                blending: THREE.AdditiveBlending
-            });
-            stars = new THREE.Points(starGeometry, starMaterial);
-            scene.add(stars);
-        }
-
-        function addSolarSystem(){
-            // Create the Sun
-            const sunGeometry = new THREE.SphereGeometry(1.5, 64, 64);
-            const sunTexture = textureLoader.load('sun_texture.jpg');
-            const sunMaterial = new THREE.MeshBasicMaterial({ 
-                map: sunTexture,
-                emissive: 0xffe87c, 
-                emissiveIntensity: 1.0 
-            });
-            sun = new THREE.Mesh(sunGeometry, sunMaterial);
-            scene.add(sun);
-            
-            const sunLight = new THREE.PointLight(0xffffff, 1.5, 100);
-            sun.add(sunLight);
-
-            const planetData = [
-                { name: 'mercury', distance: 3.5, size: 0.2, texture: 'mercury_texture.jpg', speed: 0.05 },
-                { name: 'venus', distance: 5.5, size: 0.4, texture: 'venus_texture.jpg', speed: 0.036 },
-                { name: 'earth', distance: 7.5, size: 0.45, texture: 'earth_texture.jpg', speed: 0.03 },
-                { name: 'mars', distance: 9.5, size: 0.3, texture: 'mars_texture.jpg', speed: 0.024 },
-                { name: 'jupiter', distance: 13, size: 1.2, texture: 'jupiter_texture.jpg', speed: 0.016 },
-                { name: 'saturn', distance: 17, size: 1.0, texture: 'saturn_texture.jpg', ringTexture: 'saturn_rings_texture.png', speed: 0.012 },
-                { name: 'uranus', distance: 20.5, size: 0.8, texture: 'uranus_texture.jpg', speed: 0.008 },
-                { name: 'neptune', distance: 24, size: 0.75, texture: 'neptune_texture.jpg', speed: 0.004 }
-            ];
-
-            planetData.forEach(data => {
-                const planetGeo = new THREE.SphereGeometry(data.size, 64, 64);
-                const planetTexture = textureLoader.load(data.texture);
-                const planetMat = new THREE.MeshStandardMaterial({
-                    map: planetTexture,
-                    metalness: 0.1,
-                    roughness: 0.8,
-                });
-                const planetMesh = new THREE.Mesh(planetGeo, planetMat);
-                planetMesh.userData.speed = data.speed;
-                planetMesh.userData.distance = data.distance;
-                planets.push(planetMesh);
-                scene.add(planetMesh);
-
-                const orbitGeometry = new THREE.RingGeometry(data.distance - 0.05, data.distance + 0.05, 128);
-                const orbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
-                const orbit = new THREE.Mesh(orbitGeometry, orbitMaterial);
-                orbit.rotation.x = Math.PI / 2;
-                scene.add(orbit);
-
-                if (data.name === 'saturn') {
-                    const ringTexture = textureLoader.load(data.ringTexture);
-                    const ringGeometry = new THREE.RingGeometry(data.size * 1.2, data.size * 2.5, 64);
-                    const ringMaterial = new THREE.MeshBasicMaterial({ 
-                        map: ringTexture, 
-                        side: THREE.DoubleSide,
-                        transparent: true
-                    });
-                    const rings = new THREE.Mesh(ringGeometry, ringMaterial);
-                    rings.rotation.x = Math.PI / 2 - 0.2;
-                    planetMesh.add(rings);
-                }
-            });
-        }
-
-        function animate(){
-            animationId = requestAnimationFrame(animate);
-            
-            const elapsed = clock.getElapsedTime();
-
-            planets.forEach(planet => {
-                const speed = planet.userData.speed;
-                const distance = planet.userData.distance;
-                
-                planet.position.x = Math.sin(elapsed * speed) * distance;
-                planet.position.z = Math.cos(elapsed * speed) * distance;
-                planet.rotation.y += speed * 0.5;
-            });
-
-            if (stars) {
-                stars.rotation.y += 0.0002;
-            }
-            sun.rotation.y += 0.001;
-
-            controls.update();
-            renderer.render(scene, camera);
-        }
-
-        function onWindowResize(){
-            if (!renderer) return;
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        }
-        window.addEventListener('resize', onWindowResize, false);
-
-        try {
-            initScene();
-        } catch (err){
-            showError('Initialization error: ' + (err && err.message ? err.message : String(err)));
-        }
-
-        btnSwitch.addEventListener('click', ()=>{
-            hideError();
-            cancelAnimationFrame(animationId);
-            try { initScene(); } catch(e){ showError('Retry failed: ' + e.message); }
-        });
-
-        console.log('Three.js revision:', THREE && THREE.REVISION);
-        console.log('If nothing appears: 1) Run file via http server; 2) Open console (F12) and copy errors here; 3) Try Chrome/Edge/Firefox with hardware acceleration enabled.');
+    <script>
+        // ... (all existing JavaScript remains exactly the same) ...
     </script>
 </body>
 </html>
