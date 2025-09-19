@@ -370,6 +370,13 @@
             }
         }
 
+        /* Added missing portfolio-sections style */
+        .portfolio-sections {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
         @media (max-width: 768px) {
             .main-content-row {
                 flex-direction: column;
@@ -463,6 +470,7 @@
     </div>
 
     <script>
+        // Wait for DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', function() {
             const reactor = document.getElementById('reactor');
             const reactorCore = document.getElementById('reactorCore');
@@ -869,7 +877,7 @@
                     particle.style.left = `${Math.random() * 100}%`;
                     particle.style.bottom = `${Math.random() * 100}%`;
                     particle.style.setProperty('--float-duration', `${duration}s`);
-                    particle.style.setProperty('--y-end', `${window.innerHeight + 100}px`);
+                    particle.style.setProperty('--y-end', `${window.innerHeight + 100}px`;
                     particle.style.animationDelay = `${Math.random() * 10}s`;
 
                     leftContainer.appendChild(particle);
@@ -892,7 +900,7 @@
             createSideParticles();
 
             window.addEventListener('scroll', handleScrollAnimations);
-            window.addEventListener('DOMContentLoaded', handleScrollAnimations);
+            handleScrollAnimations(); // Call once on load
         });
     </script>
 </body>
