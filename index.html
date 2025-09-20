@@ -1,14 +1,3 @@
-I see the problem now. The screenshot shows that the HTML and CSS are only partially loading, and the JavaScript is not running at all. This is a classic sign of a **broken file path**. When you host a website on a service like GitHub Pages, the file paths in your code need to be exact.
-
-The issue is with how you've linked the `1.png` and `2.png` images. The current paths `src="1.png"` and `data-hover-src="2.png"` assume the images are in the same folder as `index.html`. However, the URL in your browser `surajsolanki1.github.io/Portfolio/index.html` indicates that your images are likely located in the main `Portfolio` directory, not the `index.html`'s sub-folder. This is a common mistake when moving files.
-
-To fix this, you just need to update the image paths in your code. I've corrected the code below with the proper path for the images. I've also re-verified the entire script to make sure everything else is in perfect working order.
-
------
-
-### Corrected and Working Code
-
-```html
 <!DOCTYPE html>
  <html lang="en">
  <head>
@@ -200,3 +189,4 @@ To fix this, you just need to update the image paths in your code. I've correcte
  </body>
  </html>
 ```
+
